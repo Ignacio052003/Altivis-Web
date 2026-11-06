@@ -1,0 +1,162 @@
+---
+import { piezasDron, serviciosTaller } from '../data/contenido';
+import { formatoPrecio } from '../lib/url';
+
+const posiciones: Record<string, [number, number]> = {
+  motor: [78.3, 21.7],
+  camara: [50, 27.5],
+  controladora: [50, 44.6],
+  esc: [50, 55.8],
+  frame: [69, 69],
+  bateria: [50, 72.5],
+  receptor: [33, 82],
+};
+
+const piezas = piezasDron.map((p) => {
+  const s = serviciosTaller.find((x) => x.id === p.servicio);
+  const precio = s?.precio != null ? `${s.desde ? 'Desde ' : ''}${formatoPrecio(s.precio)}` : 'Precio cerrado tras el diagnóstico';
+  return { ...p, servicioNombre: s?.nombre ?? p.nombre, precio, pos: posiciones[p.id] };
+});
+const primera = piezas[0];
+---
+<div class="dron" data-dron>
+  <div class="dron__lienzo">
+    <svg viewBox="0 0 600 600" role="img" aria-label="Dron FPV visto desde arriba con sus piezas principales">
+      <g class="dron__helices">
+        {[[130, 130], [470, 130], [130, 470], [470, 470]].map(([x, y], i) => (
+          <g data-parte="motor" class="dron__helice" style={`--d:${i % 2 ? -1 : 1}`}>
+            <circle cx={x} cy={y} r="116" class="dron__disco" />
+            <g class="dron__aspas" style={`transform-origin:${x}px ${y}px`}>
+              <path d={`M${x - 108} ${y + 10} Q${x - 54} ${y - 16} ${x} ${y} Q${x + 54} ${y + 16} ${x + 108} ${y - 10}`} class="dron__aspa" />
+              <path d={`M${x - 10} ${y - 108} Q${x + 16} ${y - 54} ${x} ${y} Q${x - 16} ${y + 54} ${x + 10} ${y + 108}`} class="dron__aspa" />
+            </g>
+          </g>
+        ))}
+      </g>
+      <g data-parte="frame" class="dron__frame">
+        <path d="M300 300 L130 130 M300 300 L470 130 M300 300 L130 470 M300 300 L470 470" />
+        <rect x="222" y="196" width="156" height="300" rx="34" />
+      </g>
+      {[[130, 130], [470, 130], [130, 470], [470, 470]].map(([x, y]) => (
+        <g data-parte="motor" class="dron__motor">
+          <circle cx={x} cy={y} r="42" /><circle cx={x} cy={y} r="27" class="dron__campana" /><circle cx={x} cy={y} r="7" class="dron__eje" />
+        </g>
+      ))}
+      <g data-parte="camara" class="dron__pieza">
+        <rect x="262" y="140" width="76" height="62" rx="12" />
+        <circle cx="300" cy="148" r="20" class="dron__lente" />
+      </g>
+      <g data-parte="controladora" class="dron__pieza">
+        <rect x="250" y="236" width="100" height="62" rx="8" />
+        <rect x="282" y="252" width="36" height="30" rx="4" class="dron__chip" />
+      </g>
+      <g data-parte="esc" class="dron__pieza">
+        <rect x="250" y="306" width="100" height="62" rx="8" />
+        <path d="M268 322h16M268 337h16M268 352h16M316 322h16M316 337h16M316 352h16" class="dron__pistas" />
+      </g>
+      <g data-parte="bateria" class="dron__pieza">
+        <rect x="244" y="392" width="112" height="84" rx="10" />
+        <path d="M300 476v40" class="dron__cable" /><rect x="286" y="512" width="28" height="18" rx="3" />
+      </g>
+      <g data-parte="receptor" class="dron__antena">
+        <path d="M236 470 L196 534 M236 470 L176 500" /><circle cx="236" cy="470" r="9" />
+      </g>
+      <g data-parte="camara" class="dron__antena">
+        <path d="M364 470 L398 528" /><circle cx="400" cy="532" r="13" />
+      </g>
+    </svg>
+
+    {piezas.map((p) => (
+      <button type="button" class="dron__punto" style={`left:${p.pos[0]}%;top:${p.pos[1]}%`} data-pieza={p.id} aria-label={p.nombre} tabindex="-1">
+        <span></span>
+      </button>
+    ))}
+  </div>
+
+  <div class="dron__panel">
+    <div class="dron__chips" role="group" aria-label="Elige la pieza">
+      {piezas.map((p, i) => (
+        <button type="button" class="dron__chip-btn" data-pieza={p.id} aria-pressed={i === 0 ? 'true' : 'false'}>{p.nombre}</button>
+      ))}
+    </div>
+    {piezas.map((p, i) => (
+      <article class="dron__ficha" data-ficha={p.id} hidden={i !== 0} aria-live="polite">
+        <h3 class="display t-l">{p.nombre}</h3>
+        <p class="dron__sintoma">{p.sintoma}</p>
+        <dl>
+          <div><dt>Servicio</dt><dd>{p.servicioNombre}</dd></div>
+          <div><dt>Precio</dt><dd>{p.precio}</dd></div>
+        </dl>
+        <a class="boton boton--negro" href="#contacto" data-pedir={p.servicioNombre} data-pieza-nombre={p.nombre}>Pedir diagnóstico</a>
+      </article>
+    ))}
+  </div>
+</div>
+
+<style>
+  .dron { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: clamp(32px, 6vw, 96px); align-items: center; }
+  .dron__lienzo { position: relative; aspect-ratio: 1; max-width: 640px; width: 100%; justify-self: center; }
+  .dron svg { width: 100%; height: 100%; overflow: visible; }
+
+  .dron__disco { fill: rgba(17, 20, 16, .035); stroke: rgba(17, 20, 16, .12); stroke-width: 1.5; stroke-dasharray: 3 7; }
+  .dron__aspas { animation: girar 3.4s linear infinite; animation-direction: normal; }
+  .dron__helice[style*='--d:-1'] .dron__aspas { animation-direction: reverse; }
+  .dron__aspa { fill: none; stroke: rgba(17, 20, 16, .22); stroke-width: 9; stroke-linecap: round; }
+  @keyframes girar { to { transform: rotate(360deg); } }
+
+  .dron__frame path { stroke: #1D221C; stroke-width: 30; stroke-linecap: round; fill: none; }
+  .dron__frame rect { fill: #1D221C; }
+  .dron__motor circle { fill: #2C332B; }
+  .dron__motor .dron__campana { fill: #3D463B; }
+  .dron__motor .dron__eje { fill: #C9CFC5; }
+  .dron__pieza rect { fill: #3A4238; }
+  .dron__pieza .dron__chip { fill: #23291F; }
+  .dron__lente { fill: #0B0D0A; stroke: #5B6558; stroke-width: 3; }
+  .dron__pistas { stroke: #B9C1B4; stroke-width: 3; stroke-linecap: round; }
+  .dron__cable { stroke: #3A4238; stroke-width: 8; stroke-linecap: round; }
+  .dron__antena path { stroke: #3A4238; stroke-width: 5; stroke-linecap: round; fill: none; }
+  .dron__antena circle { fill: #3A4238; }
+
+  [data-parte] * { transition: fill .35s, stroke .35s; }
+  .dron [data-parte].es-activa rect, .dron [data-parte].es-activa .dron__campana, .dron .dron__motor.es-activa circle:first-child,
+  .dron [data-parte].es-activa .dron__antena circle, .dron .dron__antena.es-activa circle { fill: var(--salvia-osc); }
+  .dron .dron__frame.es-activa path { stroke: var(--salvia-osc); }
+  .dron .dron__frame.es-activa rect { fill: #2C4428; }
+  .dron .dron__antena.es-activa path, .dron .es-activa .dron__cable { stroke: var(--salvia-osc); }
+  .dron .dron__helice.es-activa .dron__aspa { stroke: var(--salvia-osc); }
+
+  .dron__punto {
+    position: absolute; width: 44px; height: 44px; margin: -22px 0 0 -22px; border: 0; padding: 0; background: transparent; cursor: pointer;
+  }
+  .dron__punto span {
+    position: absolute; inset: 13px; border-radius: 50%; background: var(--cal); box-shadow: 0 0 0 2px var(--tinta);
+    transition: transform .3s var(--ease), background-color .3s;
+  }
+  .dron__punto span::after { content: ''; position: absolute; inset: -8px; border-radius: 50%; border: 1.5px solid var(--salvia-osc); opacity: 0; animation: latido 2.4s var(--ease) infinite; }
+  .dron__punto:hover span, .dron__punto.es-activa span { transform: scale(1.25); background: var(--salvia); }
+  @keyframes latido { 0% { transform: scale(.6); opacity: .9; } 100% { transform: scale(1.6); opacity: 0; } }
+
+  .dron__panel { display: grid; gap: 40px; align-content: center; }
+  .dron__chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .dron__chip-btn {
+    min-height: 44px; padding: 0 18px; border-radius: 999px; border: 0; cursor: pointer;
+    background: transparent; box-shadow: inset 0 0 0 1.5px rgba(17, 20, 16, .2); color: var(--tinta); font-weight: 600; font-size: .95rem;
+    transition: background-color .25s, color .25s, box-shadow .25s;
+  }
+  .dron__chip-btn:hover { box-shadow: inset 0 0 0 1.5px var(--tinta); }
+  .dron__chip-btn[aria-pressed='true'] { background: var(--tinta); color: var(--cal); box-shadow: none; }
+  .dron__ficha[hidden] { display: none; }
+  .dron__ficha { display: grid; gap: 22px; min-height: 340px; align-content: start; }
+  .dron__sintoma { font-size: 1.35rem; line-height: 1.4; max-width: 30ch; }
+  .dron__ficha dl { margin: 0; display: grid; border-top: 1px solid rgba(17, 20, 16, .14); }
+  .dron__ficha dl div { display: flex; justify-content: space-between; gap: 20px; padding: 14px 0; border-bottom: 1px solid rgba(17, 20, 16, .14); }
+  .dron__ficha dt { color: var(--gris-osc); }
+  .dron__ficha dd { margin: 0; font-weight: 650; text-align: right; }
+  .dron__ficha .boton { justify-self: start; }
+
+  @media (max-width: 900px) {
+    .dron { grid-template-columns: 1fr; }
+    .dron__ficha { min-height: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) { .dron__aspas { animation: none; } }
+</style>

@@ -1,0 +1,142 @@
+---
+import { site, whatsappUrl } from '../config/site';
+import { serviciosTaller } from '../data/contenido';
+import { u } from '../lib/url';
+import Icono from './Icono.astro';
+
+interface Props {
+  modo?: 'grabacion' | 'taller' | 'videografo';
+  selector?: boolean;
+  titulo?: string;
+  texto?: string;
+  tema?: 'negro' | 'cal';
+}
+const {
+  modo = 'grabacion',
+  selector = true,
+  titulo = 'Cuéntame qué tienes en mente.',
+  texto = 'Rellena lo básico y se abre WhatsApp con el mensaje escrito. Fotos y vídeos los mandas después por el chat.',
+  tema = 'negro',
+} = Astro.props;
+const id = `f-${modo}`;
+---
+<section class:list={['contacto bloque', tema === 'cal' && 'tema-cal']} id="contacto" data-tema={tema === 'cal' ? 'cal' : undefined}>
+  <div class="wrap contacto__grid">
+    <div class="contacto__intro">
+      <h2 class="display t-xl">{titulo}</h2>
+      <p class="lead">{texto}</p>
+      <div class="contacto__directo">
+        <a class="boton boton--salvia" href={whatsappUrl()} target="_blank" rel="noopener"><Icono nombre="chat" />{site.telefono}</a>
+        <a class="enlace" href={`mailto:${site.email}`}>{site.email}</a>
+      </div>
+    </div>
+
+    <form class="ficha" data-contacto data-modo={modo} data-telefono={site.whatsapp} data-piloto={site.piloto} novalidate>
+      {selector && (
+        <fieldset class="ficha__modos">
+          <legend class="sr-only">Qué necesitas</legend>
+          <label><input type="radio" name="modo" value="grabacion" checked={modo === 'grabacion'} /><span>Quiero grabar</span></label>
+          <label><input type="radio" name="modo" value="taller" checked={modo === 'taller'} /><span>Reparar mi dron</span></label>
+        </fieldset>
+      )}
+
+      <div class="ficha__fila">
+        <label class="campo" for={`${id}-nombre`}><span>Tu nombre</span><input id={`${id}-nombre`} name="nombre" autocomplete="name" required /></label>
+        <label class="campo" for={`${id}-ciudad`}><span>Ciudad</span><input id={`${id}-ciudad`} name="ciudad" autocomplete="address-level2" /></label>
+      </div>
+
+      <div data-campos="grabacion" class="ficha__grupo">
+        <div class="ficha__fila">
+          <label class="campo" for={`${id}-tipo`}><span>Qué es</span>
+            <select id={`${id}-tipo`} name="tipo" required>
+              <option value="">Elige una opción</option>
+              <option>Boda o evento</option>
+              <option>Hotel, restaurante o espacio</option>
+              <option>Vivienda o inmobiliaria</option>
+              <option>Vehículos o deporte</option>
+              <option>Marca o campaña</option>
+              <option>Otra cosa</option>
+            </select>
+          </label>
+          <label class="campo" for={`${id}-fecha`}><span>Fecha aproximada</span><input id={`${id}-fecha`} name="fecha" placeholder="Mayo, 14 de junio…" /></label>
+        </div>
+        <label class="campo" for={`${id}-desc-g`}><span>Qué quieres enseñar</span><textarea id={`${id}-desc-g`} name="descripcion" rows="3" required placeholder="El lugar, lo que te imaginas y dónde se va a publicar."></textarea></label>
+      </div>
+
+      <div data-campos="taller" class="ficha__grupo">
+        <div class="ficha__fila">
+          <label class="campo" for={`${id}-dron`}><span>Tu dron</span><input id={`${id}-dron`} name="dron" required placeholder="5″ freestyle, cinewhoop 3″…" /></label>
+          <label class="campo" for={`${id}-servicio`}><span>Qué necesitas</span>
+            <select id={`${id}-servicio`} name="servicio" required data-servicio>
+              <option value="">Elige una opción</option>
+              {serviciosTaller.map((s) => <option value={s.nombre}>{s.nombre}</option>)}
+              <option>No lo sé</option>
+            </select>
+          </label>
+        </div>
+        <label class="campo" for={`${id}-desc-t`}><span>Qué le pasa</span><textarea id={`${id}-desc-t`} name="descripcion" rows="3" required placeholder="El golpe, los síntomas y lo que ya has probado." data-desc-taller></textarea></label>
+      </div>
+
+      <div data-campos="videografo" class="ficha__grupo">
+        <div class="ficha__fila">
+          <label class="campo" for={`${id}-marca`}><span>Tu estudio</span><input id={`${id}-marca`} name="marca" required /></label>
+          <label class="campo" for={`${id}-finca`}><span>Finca y fecha</span><input id={`${id}-finca`} name="finca" placeholder="Si ya tienes una boda en mente" /></label>
+        </div>
+        <label class="campo" for={`${id}-desc-v`}><span>Cómo trabajas</span><textarea id={`${id}-desc-v`} name="descripcion" rows="3" required placeholder="Cuántas bodas haces al año, qué planos te faltan…"></textarea></label>
+      </div>
+
+      <label class="ficha__priv"><input type="checkbox" name="privacidad" required /><span>He leído la <a href={u('/privacidad')}>información de privacidad</a>. La web no guarda nada: solo prepara el mensaje.</span></label>
+      <p class="ficha__error" role="alert" data-error hidden></p>
+      <button class="boton boton--salvia ficha__enviar" type="submit"><Icono nombre="chat" />Abrir WhatsApp con el mensaje</button>
+    </form>
+  </div>
+</section>
+
+<style>
+  .contacto { border-top: 1px solid var(--linea); }
+  .contacto__grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 64px clamp(40px, 7vw, 120px); align-items: start; }
+  .contacto__intro { display: grid; gap: 28px; position: sticky; top: 120px; }
+  .contacto__directo { display: flex; flex-wrap: wrap; align-items: center; gap: 18px 28px; margin-top: 8px; }
+
+  .ficha { display: grid; gap: 30px; }
+  .ficha__modos { border: 0; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 10px; }
+  .ficha__modos label { position: relative; cursor: pointer; }
+  .ficha__modos input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+  .ficha__modos span {
+    display: inline-flex; align-items: center; min-height: 48px; padding: 0 22px; border-radius: 999px;
+    box-shadow: inset 0 0 0 1.5px var(--linea); font-weight: 600; transition: background-color .25s, color .25s;
+  }
+  .ficha__modos input:checked + span { background: var(--cal); color: var(--tinta); box-shadow: none; }
+  .tema-cal .ficha__modos input:checked + span { background: var(--tinta); color: var(--cal); }
+  .ficha__modos input:focus-visible + span { outline: 2px solid var(--salvia); outline-offset: 3px; }
+
+  .ficha__grupo { display: grid; gap: 30px; }
+  .ficha__grupo[hidden] { display: none; }
+  .ficha__fila { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+  .campo { display: grid; gap: 4px; font-size: .92rem; color: var(--gris); }
+  .tema-cal .campo { color: var(--gris-osc); }
+  .campo input, .campo select, .campo textarea {
+    width: 100%; border: 0; border-bottom: 1.5px solid var(--linea); border-radius: 0;
+    background: transparent; color: inherit; padding: 10px 0 12px;
+    font: 500 1.25rem/1.35 var(--f-texto); color: var(--cal);
+    transition: border-color .25s;
+  }
+  .tema-cal .campo input, .tema-cal .campo select, .tema-cal .campo textarea { color: var(--tinta); border-color: rgba(17,20,16,.22); }
+  .campo select { appearance: none; background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%); background-position: calc(100% - 12px) 55%, calc(100% - 6px) 55%; background-size: 6px 6px; background-repeat: no-repeat; cursor: pointer; }
+  .campo select option { color: var(--tinta); }
+  .campo textarea { resize: vertical; min-height: 96px; }
+  .campo input::placeholder, .campo textarea::placeholder { color: rgba(161, 168, 158, .55); }
+  .campo input:focus, .campo select:focus, .campo textarea:focus { outline: none; border-color: var(--salvia); }
+  .ficha__priv { display: flex; gap: 12px; align-items: flex-start; font-size: .92rem; color: var(--gris); }
+  .tema-cal .ficha__priv { color: var(--gris-osc); }
+  .ficha__priv input { width: 20px; height: 20px; margin-top: 2px; accent-color: var(--salvia); flex: none; }
+  .ficha__error { color: var(--albero); font-weight: 600; }
+  .tema-cal .ficha__error { color: #9A4A12; }
+  .ficha__enviar { justify-self: start; min-height: 60px; padding: 0 32px; font-size: 1.05rem; }
+
+  @media (max-width: 960px) {
+    .contacto__grid { grid-template-columns: 1fr; }
+    .contacto__intro { position: static; }
+  }
+  @media (max-width: 560px) { .ficha__fila { grid-template-columns: 1fr; } .ficha__enviar { justify-self: stretch; justify-content: center; } }
+</style>

@@ -1,0 +1,60 @@
+---
+import { site, whatsappUrl } from '../config/site';
+import { u } from '../lib/url';
+const año = new Date().getFullYear();
+---
+<footer class="pie">
+  <div class="wrap pie__cols">
+    <div class="pie__marca">
+      <img src={u('/brand/isotipo-blanco.png')} alt="" width="160" height="92" />
+      <p>Grabación aérea FPV y taller de drones en {site.ciudad}.</p>
+    </div>
+    <div>
+      <h2 class="pie__tit">Contacto</h2>
+      <ul>
+        <li><a href={whatsappUrl()} target="_blank" rel="noopener">WhatsApp {site.telefono}</a></li>
+        <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
+        <li><a href={`https://www.instagram.com/${site.instagram}/`} target="_blank" rel="noopener">Instagram @{site.instagram}</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2 class="pie__tit">Servicios</h2>
+      <ul>
+        <li><a href={u('/grabacion')}>Grabación aérea</a></li>
+        <li><a href={u('/taller')}>Taller FPV</a></li>
+        <li><a href={u('/videografos')}>Para videógrafos y fincas</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2 class="pie__tit">Legal</h2>
+      <ul>
+        <li><a href={u('/aviso-legal')}>Aviso legal</a></li>
+        <li><a href={u('/privacidad')}>Privacidad</a></li>
+        {site.numeroOperador && <li>Operador UAS {site.numeroOperador}</li>}
+      </ul>
+    </div>
+  </div>
+  <div class="wrap pie__base">
+    <span>© {año} {site.nombre} · {site.titular}{site.nif ? ` · NIF ${site.nif}` : ''}</span>
+    <span>Sevilla y alrededores. Taller con envíos a toda España.</span>
+  </div>
+  <p class="pie__gigante display" aria-hidden="true">Altivis</p>
+</footer>
+
+<style>
+  .pie { position: relative; overflow: hidden; background: var(--negro); border-top: 1px solid var(--linea); padding-top: 96px; }
+  .pie__cols { display: grid; grid-template-columns: 1.4fr repeat(3, 1fr); gap: 48px 40px; }
+  .pie__marca { display: grid; gap: 20px; align-content: start; max-width: 30ch; color: var(--gris); }
+  .pie__marca img { width: 64px; height: auto; }
+  .pie__tit { font-size: .95rem; font-weight: 650; color: var(--gris); margin-bottom: 18px; }
+  .pie ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+  .pie ul a { text-decoration: none; }
+  .pie ul a:hover { text-decoration: underline; text-underline-offset: 4px; }
+  .pie__base { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 32px; margin-top: 80px; padding-top: 28px; border-top: 1px solid var(--linea); font-size: .9rem; color: var(--gris); }
+  .pie__gigante {
+    margin: 40px 0 -0.2em; text-align: center; white-space: nowrap;
+    font-size: clamp(6rem, 25vw, 26rem); color: var(--grafito); user-select: none;
+  }
+  @media (max-width: 860px) { .pie__cols { grid-template-columns: 1fr 1fr; } .pie__marca { grid-column: 1 / -1; } }
+  @media (max-width: 480px) { .pie__cols { grid-template-columns: 1fr; } }
+</style>

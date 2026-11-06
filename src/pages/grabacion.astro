@@ -1,0 +1,164 @@
+---
+import { getImage } from 'astro:assets';
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import Paso from '../components/Paso.astro';
+import Faq from '../components/Faq.astro';
+import Contacto from '../components/Contacto.astro';
+import Resenas from '../components/Resenas.astro';
+import { site } from '../config/site';
+import { drones, usosGrabacion, paquetesGrabacion, faqGrabacion } from '../data/contenido';
+import { u, formatoPrecio } from '../lib/url';
+import coche from '../assets/photos/seguimiento-coche.jpg';
+
+const usos = await Promise.all(
+  usosGrabacion.map(async (uso) => {
+    const img = await getImage({ src: uso.foto, width: 720, format: 'webp' });
+    return { ...uso, src: img.src };
+  }),
+);
+---
+<Base
+  titulo="Grabación aérea con dron FPV en Sevilla · Altivis Studio"
+  descripcion="Vídeo con dron FPV, cinewhoop y dron estabilizado en Sevilla: bodas, fincas, hoteles, restaurantes, vehículos e inmobiliaria. Permisos de vuelo incluidos."
+>
+  <Hero
+    lineas={['Entra por la puerta,', 'recorre el espacio', 'y sale volando.']}
+    texto="Grabación aérea con dron FPV, cinewhoop y dron estabilizado en Sevilla. Yo vuelo, yo edito y yo me encargo de los permisos."
+    imagen={coche}
+    alt="Dron siguiendo a un coche por una carretera de montaña"
+    video={site.video.grabacion}
+    compacto
+  >
+    <a class="boton boton--salvia" href="#contacto">Pedir propuesta</a>
+    <a class="boton boton--borde" href="#paquetes">Ver paquetes</a>
+  </Hero>
+
+  <!-- Tres drones -->
+  <section class="bloque">
+    <div class="wrap">
+      <div class="cabecera">
+        <h2 class="display t-xl">Tres drones, tres maneras de mirar.</h2>
+        <p class="lead">Cada encargo lleva el dron que mejor lo cuenta. Muchas veces, más de uno.</p>
+      </div>
+      <div class="drones">
+        {drones.map((d) => (
+          <article class="dron-fila">
+            <h3 class="display t-l">{d.nombre}</h3>
+            <p class="t-s">{d.para}</p>
+            <p class="dron-fila__como">{d.como}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Usos -->
+  <section class="bloque usos-sec">
+    <div class="wrap">
+      <div class="cabecera">
+        <h2 class="display t-xl">Lo que grabo.</h2>
+        <p class="lead">Si se puede recorrer, se puede volar. Estos son los encargos más habituales.</p>
+      </div>
+      <ul class="usos" data-usos>
+        {usos.map((uso) => (
+          <li class="uso" data-uso data-src={uso.src}>
+            <h3 class="display t-l">{uso.titulo}</h3>
+            <p>{uso.texto}</p>
+            <Image class="uso__img" src={uso.foto} alt={uso.alt} widths={[480, 800]} sizes="100vw" />
+          </li>
+        ))}
+      </ul>
+    </div>
+    <div class="usos__vista" data-usos-vista aria-hidden="true"><img src="" alt="" width="720" height="480" /></div>
+  </section>
+
+  <!-- Permisos y proceso -->
+  <section class="bloque proceso">
+    <div class="wrap proceso__grid">
+      <div class="cabecera">
+        <h2 class="display t-xl">Tú eliges el plano. Los permisos son cosa mía.</h2>
+        <p class="lead">Volar en ciudad, cerca de un aeropuerto o sobre una finca tiene sus normas. Las compruebo y las tramito yo, para que tú solo pienses en lo que quieres enseñar.</p>
+      </div>
+      <Paso
+        pasos={[
+          { titulo: 'Viabilidad', texto: 'Me cuentas el lugar y la idea. Reviso la zona de vuelo y te digo qué se puede grabar y cómo.' },
+          { titulo: 'Propuesta, permisos y fecha', texto: 'Te paso la propuesta cerrada y tramito las autorizaciones. Si la zona lo exige pueden tardar hasta 30 días: cuanto antes, mejor.' },
+          { titulo: 'Rodaje y entrega', texto: 'Vuelo, edito y te entrego el vídeo en horizontal para la web y en vertical para redes.' },
+        ]}
+      />
+    </div>
+  </section>
+
+  <!-- Paquetes -->
+  <section class="bloque paquetes-sec" id="paquetes">
+    <div class="wrap">
+      <div class="cabecera">
+        <h2 class="display t-xl">Paquetes</h2>
+        <p class="lead">Un punto de partida. Cada propuesta se ajusta al lugar, a la fecha y a lo que quieras contar.</p>
+      </div>
+      <div class="paquetes">
+        {paquetesGrabacion.map((p) => (
+          <article class="paquete">
+            <h3 class="display t-m">{p.nombre}</h3>
+            <p class="paquete__para">{p.para}</p>
+            <ul>{p.incluye.map((i) => <li>{i}</li>)}</ul>
+            <p class="paquete__precio">
+              {p.precio != null ? <>{p.desde && <small>Desde</small>}{formatoPrecio(p.precio)}</> : <span>Precio según lugar y fecha</span>}
+            </p>
+          </article>
+        ))}
+      </div>
+      <p class="paquetes__nota">¿Eres videógrafo o tienes una finca? <a class="enlace" href={u('/videografos')}>Trabajo contigo</a></p>
+    </div>
+  </section>
+
+  <Resenas />
+  <Faq preguntas={faqGrabacion} />
+  <Contacto modo="grabacion" selector={false} titulo="¿Qué quieres grabar?" />
+</Base>
+
+<style>
+  .cabecera { display: grid; gap: 28px; max-width: 900px; margin-bottom: clamp(56px, 8vw, 110px); }
+
+  .drones { border-top: 1px solid var(--linea); }
+  .dron-fila { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr) minmax(0, 1fr); gap: 16px 48px; align-items: baseline; padding: 36px 0; border-bottom: 1px solid var(--linea); }
+  .dron-fila__como { color: var(--gris); }
+  @media (max-width: 900px) { .dron-fila { grid-template-columns: 1fr; } }
+
+  .usos-sec { border-top: 1px solid var(--linea); }
+  .usos { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--linea); }
+  .uso { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 16px 48px; align-items: center; padding: 40px 0; border-bottom: 1px solid var(--linea); transition: color .3s; }
+  .uso p { color: var(--gris); max-width: 44ch; }
+  .uso :global(.uso__img) { display: none; }
+  @media (hover: hover) and (min-width: 900px) {
+    .usos:hover .uso { color: rgba(242, 243, 238, .35); }
+    .usos:hover .uso:hover { color: var(--cal); }
+  }
+  @media (max-width: 899px), (hover: none) {
+    .uso { grid-template-columns: 1fr; }
+    .uso :global(.uso__img) { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; margin-top: 8px; }
+  }
+  .usos__vista { position: fixed; left: 0; top: 0; z-index: 60; width: 360px; aspect-ratio: 3 / 2; pointer-events: none; opacity: 0; transform: scale(.92); overflow: hidden; }
+  .usos__vista img { width: 100%; height: 100%; object-fit: cover; }
+
+  .proceso { border-top: 1px solid var(--linea); }
+
+  .paquetes-sec { border-top: 1px solid var(--linea); }
+  .paquetes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--linea); }
+  .paquete { display: grid; grid-template-rows: auto auto 1fr auto; gap: 18px; padding: 40px 36px 40px 0; }
+  .paquete + .paquete { padding-left: 36px; border-left: 1px solid var(--linea); }
+  .paquete__para { color: var(--gris); }
+  .paquete ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; align-content: start; }
+  .paquete li { padding-left: 22px; position: relative; }
+  .paquete li::before { content: ''; position: absolute; left: 0; top: .72em; width: 10px; height: 1.5px; background: var(--salvia); }
+  .paquete__precio { font-size: 2rem; font-weight: 800; font-stretch: 118%; margin-top: 12px; display: flex; align-items: baseline; gap: 8px; }
+  .paquete__precio small { font-size: .95rem; font-weight: 600; font-stretch: 100%; color: var(--gris); }
+  .paquete__precio span { font-size: 1.05rem; font-weight: 600; font-stretch: 100%; color: var(--salvia); }
+  .paquetes__nota { margin-top: 48px; color: var(--gris); display: flex; flex-wrap: wrap; gap: 12px; align-items: baseline; }
+  @media (max-width: 900px) {
+    .paquetes { grid-template-columns: 1fr; }
+    .paquete, .paquete + .paquete { padding: 36px 0; border-left: 0; border-bottom: 1px solid var(--linea); }
+  }
+</style>

@@ -1,0 +1,165 @@
+/* =========================================================
+   Altivis Studio · sistema visual
+   ---------------------------------------------------------
+   Idea: la web es un vuelo visto desde las gafas del piloto.
+   El OSD (REC, batería, altitud, velocidad) es lo único
+   llamativo; todo lo demás es tranquilo y deja hablar a la
+   imagen.
+   ========================================================= */
+
+:root {
+  --negro: #030403;      /* negro de vídeo */
+  --grafito: #141714;    /* superficies sobre negro */
+  --linea: rgba(242, 243, 238, 0.14);
+  --cal: #F2F3EE;        /* blanco cal, fondo del taller */
+  --cal-2: #E4E7DF;
+  --tinta: #111410;      /* texto sobre cal */
+  --gris: #A1A89E;       /* texto secundario sobre negro */
+  --gris-osc: #4C5549;   /* texto secundario sobre cal */
+  --salvia: #97B58F;     /* color de marca */
+  --salvia-osc: #3A5834; /* salvia legible sobre cal */
+  --albero: #E8A73E;     /* avisos del OSD */
+  --rec: #FF3B30;
+
+  --f-texto: 'Archivo Variable', 'Archivo', system-ui, sans-serif;
+  --f-osd: 'Share Tech Mono', ui-monospace, monospace;
+
+  --gutter: clamp(20px, 4.2vw, 64px);
+  --ancho: 1480px;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+body {
+  margin: 0;
+  background: var(--negro);
+  color: var(--cal);
+  font-family: var(--f-texto);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  font-stretch: 100%;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+img, video, svg { display: block; max-width: 100%; }
+a { color: inherit; }
+button { font: inherit; color: inherit; }
+p { margin: 0; }
+h1, h2, h3, h4 { margin: 0; font-weight: 800; text-wrap: balance; }
+::selection { background: var(--salvia); color: var(--tinta); }
+:focus-visible { outline: 2px solid var(--salvia); outline-offset: 4px; border-radius: 2px; }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+.skip {
+  position: fixed; left: 16px; top: -60px; z-index: 200; padding: 12px 18px;
+  background: var(--cal); color: var(--tinta); border-radius: 999px; text-decoration: none; font-weight: 600;
+}
+.skip:focus { top: 16px; }
+
+/* ---------- Tipografía ---------- */
+
+.display {
+  font-stretch: 125%;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 0.92;
+}
+.t-hero { font-size: clamp(2.9rem, 8.4vw, 9.4rem); }
+.t-xl { font-size: clamp(2.4rem, 6vw, 6.4rem); }
+.t-l { font-size: clamp(2rem, 4.2vw, 4.25rem); line-height: 0.98; }
+.t-m { font-size: clamp(1.5rem, 2.4vw, 2.25rem); line-height: 1.08; letter-spacing: -0.015em; font-stretch: 112%; font-weight: 750; }
+.t-s { font-size: 1.25rem; line-height: 1.25; font-stretch: 110%; font-weight: 700; letter-spacing: -0.005em; }
+.lead { font-size: clamp(1.125rem, 1.5vw, 1.375rem); line-height: 1.5; color: var(--gris); max-width: 46ch; }
+.osd { font-family: var(--f-osd); letter-spacing: 0.04em; }
+
+/* ---------- Estructura ---------- */
+
+.wrap { width: 100%; max-width: var(--ancho); margin-inline: auto; padding-inline: var(--gutter); }
+.bloque { padding-block: clamp(96px, 14vw, 200px); }
+.tema-cal { background: var(--cal); color: var(--tinta); }
+.tema-cal .lead { color: var(--gris-osc); }
+
+/* ---------- Botones ---------- */
+
+.boton {
+  --bg: var(--cal); --fg: var(--tinta);
+  display: inline-flex; align-items: center; gap: 12px;
+  min-height: 56px; padding: 0 28px;
+  border-radius: 999px; border: 0;
+  background: var(--bg); color: var(--fg);
+  font-weight: 650; font-size: 1rem; letter-spacing: 0.005em;
+  text-decoration: none; cursor: pointer;
+  transition: transform .35s var(--ease), background-color .25s;
+}
+.boton:hover { transform: translateY(-2px); }
+.boton:active { transform: translateY(0); }
+.boton svg { width: 20px; height: 20px; flex: none; }
+.boton--salvia { --bg: var(--salvia); --fg: #0C160A; }
+.boton--salvia:hover { --bg: #A8C4A0; }
+.boton--negro { --bg: var(--tinta); --fg: var(--cal); }
+.boton--borde { --bg: transparent; --fg: currentColor; box-shadow: inset 0 0 0 1.5px currentColor; }
+
+.enlace {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-weight: 650; text-decoration: none;
+  background: linear-gradient(currentColor, currentColor) 0 100% / 100% 1.5px no-repeat;
+  padding-bottom: 4px; transition: background-size .4s var(--ease);
+}
+.enlace:hover { background-size: 0 1.5px; background-position: 100% 100%; }
+
+/* ---------- Grano de película ---------- */
+
+.grano {
+  position: fixed; inset: -50%; z-index: 90; pointer-events: none; opacity: .07;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grano 1s steps(4) infinite;
+}
+@keyframes grano {
+  0% { transform: translate(0, 0); } 25% { transform: translate(-3%, 2%); }
+  50% { transform: translate(2%, -3%); } 75% { transform: translate(-1%, 3%); } 100% { transform: translate(0, 0); }
+}
+
+/* ---------- Preguntas ---------- */
+
+.faq { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 48px 64px; }
+.faq__lista { border-top: 1px solid var(--linea); }
+.tema-cal .faq__lista, .tema-cal .faq__item { border-color: rgba(17, 20, 16, .14); }
+.faq__item { border-bottom: 1px solid var(--linea); }
+.faq__item summary {
+  list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 24px;
+  padding: 26px 0; font-size: 1.2rem; font-weight: 650; font-stretch: 105%;
+}
+.faq__item summary::-webkit-details-marker { display: none; }
+.faq__mas { position: relative; width: 22px; height: 22px; flex: none; }
+.faq__mas::before, .faq__mas::after {
+  content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 2px; margin-top: -1px;
+  background: currentColor; transition: transform .4s var(--ease);
+}
+.faq__mas::after { transform: rotate(90deg); }
+.faq__item[open] .faq__mas::after { transform: rotate(0); }
+.faq__item p { padding: 0 0 28px; max-width: 60ch; color: var(--gris); }
+.tema-cal .faq__item p { color: var(--gris-osc); }
+@media (max-width: 860px) { .faq { grid-template-columns: 1fr; } }
+
+/* ---------- Estado inicial de la entrada del hero (lo anima intro.ts) ---------- */
+
+.linea { display: block; overflow: hidden; padding-bottom: 0.06em; margin-bottom: -0.06em; }
+.linea > span { display: block; }
+html.animar [data-linea] { transform: translateY(105%); }
+html.animar [data-entra] { opacity: 0; }
+
+/* ---------- Movimiento reducido ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+  .grano { display: none; }
+}

@@ -1,0 +1,19 @@
+---
+import Base from './Base.astro';
+interface Props { titulo: string; descripcion: string }
+const { titulo, descripcion } = Astro.props;
+---
+<Base titulo={`${titulo} · Altivis Studio`} descripcion={descripcion}>
+  <article class="legal wrap">
+    <h1 class="display t-xl">{titulo}</h1>
+    <div class="legal__texto"><slot /></div>
+  </article>
+</Base>
+
+<style>
+  .legal { padding-top: 180px; padding-bottom: 140px; display: grid; gap: 64px; }
+  .legal__texto { max-width: 68ch; display: grid; gap: 18px; color: var(--gris); }
+  .legal__texto :global(h2) { color: var(--cal); font-size: 1.3rem; font-stretch: 108%; margin-top: 28px; }
+  .legal__texto :global(strong) { color: var(--cal); }
+  .legal__texto :global(ul) { margin: 0; padding-left: 20px; display: grid; gap: 8px; }
+</style>

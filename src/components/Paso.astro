@@ -1,0 +1,26 @@
+---
+// Pasos de un proceso real (aquí la numeración sí tiene sentido: es una secuencia).
+interface Props { pasos: { titulo: string; texto: string }[]; tema?: 'negro' | 'cal' }
+const { pasos, tema = 'negro' } = Astro.props;
+---
+<ol class:list={['pasos', tema === 'cal' && 'pasos--cal']}>
+  {pasos.map((p, i) => (
+    <li>
+      <span class="pasos__n osd">{String(i + 1).padStart(2, '0')}</span>
+      <h3 class="t-s">{p.titulo}</h3>
+      <p>{p.texto}</p>
+    </li>
+  ))}
+</ol>
+
+<style>
+  .pasos { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 40px 32px; counter-reset: paso; }
+  .pasos li { display: grid; gap: 12px; align-content: start; padding-top: 22px; border-top: 1.5px solid var(--linea); position: relative; }
+  .pasos li::before { content: ''; position: absolute; top: -1.5px; left: 0; width: 48px; height: 1.5px; background: var(--salvia); }
+  .pasos__n { font-size: .95rem; color: var(--salvia); }
+  .pasos p { color: var(--gris); max-width: 34ch; }
+  .pasos--cal li { border-top-color: rgba(17, 20, 16, .16); }
+  .pasos--cal li::before { background: var(--salvia-osc); }
+  .pasos--cal .pasos__n { color: var(--salvia-osc); }
+  .pasos--cal p { color: var(--gris-osc); }
+</style>

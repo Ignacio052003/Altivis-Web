@@ -1,0 +1,65 @@
+---
+// OSD de las gafas FPV. Puramente decorativo: los lectores de pantalla lo ignoran.
+// Batería y altitud bajan a medida que avanzas por la página (el vuelo termina en el contacto);
+// la velocidad sale de la velocidad real de scroll.
+---
+<div class="hud" aria-hidden="true">
+  <span class="hud__esq hud__esq--ti"></span>
+  <span class="hud__esq hud__esq--td"></span>
+  <span class="hud__esq hud__esq--bi"></span>
+  <span class="hud__esq hud__esq--bd"></span>
+
+  <div class="hud__rec osd"><span class="hud__punto"></span>REC <span data-hud-tiempo>00:00:00</span></div>
+
+  <div class="hud__centro osd">
+    <span><span data-hud-spd>0</span><small>KM/H</small></span>
+    <span class="hud__sep"></span>
+    <span><span data-hud-alt>120</span><small>M</small></span>
+  </div>
+
+  <div class="hud__bat osd" data-hud-bat>
+    <span class="hud__aviso">BATERÍA BAJA</span>
+    <span data-hud-volt>16.8V</span>
+    <svg width="34" height="15" viewBox="0 0 34 15" fill="none">
+      <rect x="1" y="1" width="28" height="13" rx="2" stroke="currentColor" stroke-width="1.5" />
+      <rect x="30" y="4.5" width="3" height="6" rx="1" fill="currentColor" />
+      <rect data-hud-carga x="3.5" y="3.5" width="23" height="8" rx="1" fill="currentColor" />
+    </svg>
+  </div>
+</div>
+
+<style>
+  .hud {
+    position: fixed; inset: 0; z-index: 80; pointer-events: none;
+    color: #fff; mix-blend-mode: difference;
+    font-size: 13px; line-height: 1;
+  }
+  .hud__esq { position: absolute; width: 28px; height: 28px; border: 0 solid rgba(255,255,255,.75); }
+  .hud__esq--ti { top: 14px; left: 14px; border-top-width: 1.5px; border-left-width: 1.5px; }
+  .hud__esq--td { top: 14px; right: 14px; border-top-width: 1.5px; border-right-width: 1.5px; }
+  .hud__esq--bi { bottom: 14px; left: 14px; border-bottom-width: 1.5px; border-left-width: 1.5px; }
+  .hud__esq--bd { bottom: 14px; right: 14px; border-bottom-width: 1.5px; border-right-width: 1.5px; }
+
+  .hud__rec { position: absolute; left: 30px; bottom: 30px; display: flex; align-items: center; gap: 8px; }
+  .hud__punto { width: 8px; height: 8px; border-radius: 50%; background: var(--rec); animation: parpadeo 1.6s steps(2) infinite; }
+  .hud__bat { position: absolute; right: 30px; bottom: 30px; display: flex; align-items: center; gap: 10px; }
+  .hud__aviso { display: none; }
+  .hud__bat.es-baja .hud__aviso { display: inline; animation: parpadeo 1s steps(2) infinite; }
+
+  .hud__centro { position: absolute; left: 50%; bottom: 30px; transform: translateX(-50%); display: flex; align-items: center; gap: 18px; }
+  .hud__centro > span { display: flex; align-items: baseline; }
+  .hud__centro [data-hud-spd], .hud__centro [data-hud-alt] { display: inline-block; min-width: 3ch; text-align: right; }
+  .hud__sep { width: 1px; height: 12px; background: currentColor; opacity: .5; }
+  .hud small { font-size: 10px; margin-left: 4px; opacity: .75; }
+
+  @keyframes parpadeo { 50% { opacity: 0; } }
+
+  @media (max-width: 760px) {
+    .hud__centro { display: none; }
+    .hud__esq { width: 18px; height: 18px; }
+    .hud__esq--ti, .hud__esq--td { top: 10px; } .hud__esq--bi, .hud__esq--bd { bottom: 10px; }
+    .hud__esq--ti, .hud__esq--bi { left: 10px; } .hud__esq--td, .hud__esq--bd { right: 10px; }
+    .hud__rec { left: 22px; bottom: 22px; font-size: 11px; }
+    .hud__bat { right: 22px; bottom: 22px; font-size: 11px; }
+  }
+</style>

@@ -1,0 +1,88 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import Paso from '../components/Paso.astro';
+import Faq from '../components/Faq.astro';
+import Contacto from '../components/Contacto.astro';
+import { faqVideografos } from '../data/contenido';
+import chalet from '../assets/photos/chalet-aereo.jpg';
+import cinewhoop from '../assets/photos/cinewhoop.jpg';
+---
+<Base
+  titulo="FPV para videógrafos, fotógrafos y fincas de bodas en Sevilla · Altivis Studio"
+  descripcion="Piloto FPV en Sevilla para videógrafos, fotógrafos, wedding planners y fincas. Tú tienes la boda; yo pongo el plano aéreo que te falta, con permisos incluidos."
+>
+  <Hero
+    lineas={['Añade FPV', 'a tus bodas', 'sin comprar un dron.']}
+    texto="Para videógrafos, fotógrafos, wedding planners y fincas de Sevilla. Tú tienes la boda; yo pongo el plano que te falta."
+    imagen={chalet}
+    alt="Finca de bodas vista desde el aire"
+    posicion="center 60%"
+    compacto
+  >
+    <a class="boton boton--salvia" href="#contacto">Hablemos</a>
+  </Hero>
+
+  <section class="bloque">
+    <div class="wrap">
+      <h2 class="display t-xl titulo">Trabajo para ti, no contra ti.</h2>
+      <div class="ventajas">
+        <article>
+          <h3 class="t-m">Tu marca, tu cliente</h3>
+          <p>Voy como parte de tu equipo. La pareja es tuya y el reportaje también.</p>
+        </article>
+        <article>
+          <h3 class="t-m">Sin invertir en equipo</h3>
+          <p>Ni drones, ni seguro, ni permisos, ni horas de práctica. Lo pongo yo.</p>
+        </article>
+        <article>
+          <h3 class="t-m">El plano que vende</h3>
+          <p>La llegada de los novios, la salida de la iglesia, la finca entera en una sola toma. Lo que hace que te elijan.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="bloque borde">
+    <div class="wrap">
+      <h2 class="display t-xl titulo">Cómo lo hacemos</h2>
+      <Paso
+        pasos={[
+          { titulo: 'Me pasas fecha y finca', texto: 'Con eso compruebo la zona de vuelo y te digo qué planos son posibles.' },
+          { titulo: 'Tramito los permisos', texto: 'Autorizaciones y comunicaciones, si hacen falta. Tú no te ocupas de nada.' },
+          { titulo: 'Vuelo con tu equipo', texto: 'Nos coordinamos antes para no pisarnos y saber qué momentos quieres.' },
+          { titulo: 'Te entrego el material', texto: 'En bruto o seleccionado, listo para tu montaje.' },
+        ]}
+      />
+    </div>
+  </section>
+
+  <section class="bloque borde fincas">
+    <div class="wrap fincas__grid">
+      <div class="fincas__texto">
+        <h2 class="display t-xl">¿Tienes una finca?</h2>
+        <p class="lead">Un recorrido FPV que entra por la cancela, cruza los jardines y termina en el salón enseña tu finca mejor que cualquier galería de fotos. Y después puedo volar en las bodas que celebres.</p>
+        <a class="boton boton--salvia" href="#contacto">Grabar mi finca</a>
+      </div>
+      <Image src={cinewhoop} alt="Cinewhoop, el dron con protecciones para volar en interiores" widths={[600, 1000]} sizes="(max-width: 900px) 100vw, 45vw" />
+    </div>
+  </section>
+
+  <Faq preguntas={faqVideografos} />
+  <Contacto modo="videografo" selector={false} titulo="Cuéntame cómo trabajas." texto="Rellena lo básico y se abre WhatsApp con el mensaje escrito. Si ya tienes una boda en mente, dime la finca y la fecha." />
+</Base>
+
+<style>
+  .titulo { margin-bottom: clamp(56px, 8vw, 110px); max-width: 16ch; }
+  .borde { border-top: 1px solid var(--linea); }
+  .ventajas { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 48px; }
+  .ventajas article { display: grid; gap: 16px; align-content: start; padding-top: 24px; border-top: 1.5px solid var(--cal); }
+  .ventajas p { color: var(--gris); max-width: 36ch; }
+  @media (max-width: 900px) { .ventajas { grid-template-columns: 1fr; } }
+
+  .fincas__grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px clamp(40px, 7vw, 120px); align-items: center; }
+  .fincas__texto { display: grid; gap: 28px; justify-items: start; }
+  .fincas__grid :global(img) { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; }
+  @media (max-width: 900px) { .fincas__grid { grid-template-columns: 1fr; } }
+</style>
