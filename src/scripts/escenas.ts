@@ -6,7 +6,6 @@ export function iniciarEscenas(reducido: boolean) {
   hero();
   palabras();
   tira();
-  usos();
   ScrollTrigger.refresh();
 }
 
@@ -93,23 +92,4 @@ function tira() {
     if (barra) gsap.fromTo(barra, { scaleX: 0 }, { scaleX: 1, ease: 'none', scrollTrigger: { trigger: sec, start: 'top top', end: () => `+=${distancia()}`, scrub: true } });
     return () => tween.kill();
   });
-}
-
-/** Lista de usos con imagen que sigue al cursor (solo escritorio). */
-function usos() {
-  const lista = document.querySelector<HTMLElement>('[data-usos]');
-  const vista = document.querySelector<HTMLElement>('[data-usos-vista]');
-  if (!lista || !vista || !window.matchMedia('(pointer: fine) and (min-width: 900px)').matches) return;
-  const img = vista.querySelector('img');
-  const qx = gsap.quickTo(vista, 'x', { duration: 0.6, ease: 'power3.out' });
-  const qy = gsap.quickTo(vista, 'y', { duration: 0.6, ease: 'power3.out' });
-  lista.addEventListener('pointermove', (e) => { qx(e.clientX + 28); qy(e.clientY - 120); });
-  lista.querySelectorAll<HTMLElement>('[data-uso]').forEach((fila) => {
-    fila.addEventListener('pointerenter', () => {
-      const src = fila.dataset.src; const srcset = fila.dataset.srcset;
-      if (img && src) { img.src = src; if (srcset) img.srcset = srcset; img.alt = ''; }
-      gsap.to(vista, { opacity: 1, scale: 1, duration: 0.4, ease: 'power3.out' });
-    });
-  });
-  lista.addEventListener('pointerleave', () => gsap.to(vista, { opacity: 0, scale: 0.92, duration: 0.3 }));
 }

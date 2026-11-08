@@ -64,17 +64,23 @@ const lista = site.plazoEntrega ? [...entregables, `Entrega en ${site.plazoEntre
   <section class="bloque" id="que-grabo" aria-labelledby="usos-titulo">
     <div class="wrap">
       <h2 id="usos-titulo" class="display t-xl cine-titulo">Lo que grabo</h2>
-      <ul class="usos" data-usos>
-        {usos.map((uso) => (
-          <li class="uso" data-uso data-src={uso.src}>
-            <h3 class="display t-l">{uso.titulo}</h3>
-            <p>{uso.texto}</p>
-            <Image class="uso__img" src={uso.foto} alt={uso.alt} widths={[480, 800]} sizes="100vw" />
-          </li>
-        ))}
-      </ul>
+      <div class="usos-grid" data-usos>
+        <ul class="usos">
+          {usos.map((uso, i) => (
+            <li class:list={['uso', i === 0 && 'es-activo']} data-uso={i}>
+              <h3 class="display t-l">{uso.titulo}</h3>
+              <p>{uso.texto}</p>
+              <Image class="uso__img" src={uso.foto} alt={uso.alt} widths={[480, 800]} sizes="100vw" />
+            </li>
+          ))}
+        </ul>
+        <div class="usos__marco" aria-hidden="true">
+          {usos.map((uso, i) => (
+            <Image class:list={['usos__foto', i === 0 && 'es-activo']} data-foto={i} src={uso.foto} alt="" widths={[640, 960, 1280]} sizes="45vw" />
+          ))}
+        </div>
+      </div>
     </div>
-    <div class="usos__vista" data-usos-vista aria-hidden="true"><img src="" alt="" width="720" height="480" /></div>
   </section>
 
   <!-- Cómo funciona -->
@@ -131,21 +137,24 @@ const lista = site.plazoEntrega ? [...entregables, `Entrega en ${site.plazoEntre
     .cine-toma figcaption { grid-template-columns: 1fr; }
   }
 
-  /* Usos */
+  /* Usos: lista a la izquierda, marco fijo a la derecha que cambia de imagen */
+  .usos-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(32px, 5vw, 80px); align-items: start; }
   .usos { list-style: none; margin: 0; padding: 0; }
-  .uso { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 12px 48px; align-items: baseline; padding: 30px 0; transition: color .3s; }
-  .uso p { color: var(--gris); font-size: 1.15rem; }
+  .uso { display: grid; gap: 8px; padding: clamp(28px, 4vw, 48px) 0; color: rgba(242, 243, 238, .32); transition: color .4s; cursor: default; }
+  .uso p { color: inherit; font-size: 1.15rem; transition: color .4s; }
+  .uso.es-activo { color: var(--cal); }
+  .uso.es-activo p { color: var(--gris); }
   .uso :global(.uso__img) { display: none; }
-  @media (hover: hover) and (min-width: 900px) {
-    .usos:hover .uso { color: rgba(242, 243, 238, .3); }
-    .usos:hover .uso:hover { color: var(--cal); }
-  }
-  @media (max-width: 899px), (hover: none) {
-    .uso { grid-template-columns: 1fr; }
+  .usos__marco { position: sticky; top: 18vh; aspect-ratio: 4 / 3; overflow: hidden; background: var(--grafito); }
+  .usos__marco :global(.usos__foto) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.06); transition: opacity .7s var(--ease), transform 1.2s var(--ease); }
+  .usos__marco :global(.usos__foto.es-activo) { opacity: 1; transform: scale(1); }
+  @media (max-width: 899px) {
+    .usos-grid { grid-template-columns: 1fr; }
+    .usos__marco { display: none; }
+    .uso, .uso p { color: var(--cal); }
+    .uso p { color: var(--gris); }
     .uso :global(.uso__img) { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; margin-top: 10px; }
   }
-  .usos__vista { position: fixed; left: 0; top: 0; z-index: 60; width: 380px; aspect-ratio: 3 / 2; pointer-events: none; opacity: 0; transform: scale(.92); overflow: hidden; }
-  .usos__vista img { width: 100%; height: 100%; object-fit: cover; }
 
   /* Lo que recibes */
   .recibes { list-style: none; margin: clamp(64px, 8vw, 110px) 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 28px 40px; }

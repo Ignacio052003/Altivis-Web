@@ -70,6 +70,7 @@ const id = `f-${modo}`;
             <select id={`${id}-servicio`} name="servicio" required data-servicio>
               <option value="">Elige una opción</option>
               {serviciosTaller.map((s) => <option value={s.nombre}>{s.nombre}</option>)}
+              <option>Varias cosas</option>
               <option>No lo sé</option>
             </select>
           </label>

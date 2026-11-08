@@ -7,6 +7,7 @@ import { iniciarNav } from './nav';
 import { iniciarEscenas } from './escenas';
 import { iniciarContacto } from './contacto';
 import { iniciarDron } from './dron';
+import { iniciarUsos } from './usos';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -37,6 +38,7 @@ iniciarNav(lenis);
 iniciarHud(lenis, reducido);
 iniciarContacto();
 iniciarDron();
+iniciarUsos();
 iniciarIntro(lenis, () => iniciarEscenas(reducido));
 
 window.addEventListener('load', () => ScrollTrigger.refresh());

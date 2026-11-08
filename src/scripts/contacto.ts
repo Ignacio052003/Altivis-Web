@@ -23,14 +23,18 @@ export function iniciarContacto() {
       r.addEventListener('change', () => setModo(r.value)),
     );
 
-    // El diagrama del taller rellena la ficha con la pieza elegida
+    // El diagrama del taller rellena la ficha con las piezas marcadas
     document.addEventListener('altivis:pieza', (e) => {
-      const { servicio, pieza } = (e as CustomEvent).detail as { servicio: string; pieza: string };
+      const { piezas, servicios } = (e as CustomEvent).detail as { piezas: string[]; servicios: string[] };
       setModo('taller');
       const sel = form.querySelector<HTMLSelectElement>('[data-servicio]');
-      if (sel) sel.value = servicio;
+      if (sel) sel.value = servicios.length === 1 ? servicios[0] : servicios.length > 1 ? 'Varias cosas' : 'No lo sé';
       const desc = form.querySelector<HTMLTextAreaElement>('[data-desc-taller]');
-      if (desc && !desc.value) desc.value = `Creo que el problema está en: ${pieza}. `;
+      // Solo se sobrescribe si el texto lo había puesto el diagrama, nunca lo que escribió el piloto
+      if (desc && (!desc.value || desc.dataset.auto === desc.value)) {
+        desc.value = piezas.length ? `Creo que falla: ${piezas.join(', ')}. ` : '';
+        desc.dataset.auto = desc.value;
+      }
     });
 
     form.addEventListener('submit', (e) => {
