@@ -14,10 +14,9 @@ const posiciones: Record<string, [number, number]> = {
 
 const piezas = piezasDron.map((p) => {
   const s = serviciosTaller.find((x) => x.id === p.servicio);
-  const precio = s?.precio != null ? `${s.desde ? 'Desde ' : ''}${formatoPrecio(s.precio)}` : 'Precio cerrado tras el diagnóstico';
+  const precio = s?.precio != null ? `${s.desde ? 'Desde ' : ''}${formatoPrecio(s.precio)}` : 'Tras el diagnóstico';
   return { ...p, servicioNombre: s?.nombre ?? p.nombre, precio, pos: posiciones[p.id] };
 });
-const primera = piezas[0];
 ---
 <div class="dron" data-dron>
   <div class="dron__lienzo">
@@ -74,22 +73,30 @@ const primera = piezas[0];
   </div>
 
   <div class="dron__panel">
-    <div class="dron__chips" role="group" aria-label="Elige la pieza">
-      {piezas.map((p, i) => (
-        <button type="button" class="dron__chip-btn" data-pieza={p.id} aria-pressed={i === 0 ? 'true' : 'false'}>{p.nombre}</button>
+    <div class="dron__chips" role="group" aria-label="Piezas que fallan (puedes marcar varias)">
+      {piezas.map((p) => (
+        <button type="button" class="dron__chip-btn" data-pieza={p.id} aria-pressed="false">{p.nombre}</button>
       ))}
     </div>
-    {piezas.map((p, i) => (
-      <article class="dron__ficha" data-ficha={p.id} hidden={i !== 0} aria-live="polite">
-        <h3 class="display t-l">{p.nombre}</h3>
-        <p class="dron__sintoma">{p.sintoma}</p>
-        <dl>
-          <div><dt>Servicio</dt><dd>{p.servicioNombre}</dd></div>
-          <div><dt>Precio</dt><dd>{p.precio}</dd></div>
-        </dl>
-        <a class="boton boton--negro" href="#contacto" data-pedir={p.servicioNombre} data-pieza-nombre={p.nombre}>Pedir diagnóstico</a>
-      </article>
-    ))}
+
+    <p class="dron__vacio display t-m" data-vacio>Marca una o varias piezas.</p>
+
+    <ul class="dron__lista" aria-live="polite">
+      {piezas.map((p) => (
+        <li data-ficha={p.id} data-servicio={p.servicioNombre} data-nombre={p.nombre} hidden>
+          <div>
+            <h3 class="t-s">{p.nombre}</h3>
+            <p>{p.sintoma}</p>
+          </div>
+          <span>{p.precio}</span>
+        </li>
+      ))}
+    </ul>
+
+    <div class="dron__accion">
+      <a class="boton boton--negro" href="#contacto" data-pedir>Pedir diagnóstico</a>
+      <button type="button" class="dron__limpiar" data-limpiar hidden>Desmarcar todo</button>
+    </div>
   </div>
 </div>
 
@@ -145,18 +152,20 @@ const primera = piezas[0];
   }
   .dron__chip-btn:hover { box-shadow: inset 0 0 0 1.5px var(--tinta); }
   .dron__chip-btn[aria-pressed='true'] { background: var(--tinta); color: var(--cal); box-shadow: none; }
-  .dron__ficha[hidden] { display: none; }
-  .dron__ficha { display: grid; gap: 22px; min-height: 340px; align-content: start; }
-  .dron__sintoma { font-size: 1.35rem; line-height: 1.4; max-width: 30ch; }
-  .dron__ficha dl { margin: 0; display: grid; border-top: 1px solid rgba(17, 20, 16, .14); }
-  .dron__ficha dl div { display: flex; justify-content: space-between; gap: 20px; padding: 14px 0; border-bottom: 1px solid rgba(17, 20, 16, .14); }
-  .dron__ficha dt { color: var(--gris-osc); }
-  .dron__ficha dd { margin: 0; font-weight: 650; text-align: right; }
-  .dron__ficha .boton { justify-self: start; }
+  .dron__vacio { color: var(--gris-osc); max-width: 16ch; }
+  .dron__vacio[hidden] { display: none; }
+  .dron__lista { list-style: none; margin: 0; padding: 0; display: grid; }
+  .dron__lista li { display: flex; justify-content: space-between; align-items: baseline; gap: 20px; padding: 16px 0; border-bottom: 1px solid rgba(17, 20, 16, .14); }
+  .dron__lista li:first-child:not([hidden]), .dron__lista li:not([hidden]) ~ li { border-top: 0; }
+  .dron__lista li[hidden] { display: none; }
+  .dron__lista p { color: var(--gris-osc); margin-top: 2px; }
+  .dron__lista span { font-weight: 650; font-size: .95rem; color: var(--salvia-osc); text-align: right; max-width: 14ch; }
+  .dron__accion { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; }
+  .dron__limpiar { border: 0; background: none; padding: 10px 0; cursor: pointer; color: var(--gris-osc); text-decoration: underline; text-underline-offset: 4px; }
+  .dron__limpiar[hidden] { display: none; }
 
   @media (max-width: 900px) {
     .dron { grid-template-columns: 1fr; }
-    .dron__ficha { min-height: 0; }
   }
   @media (prefers-reduced-motion: reduce) { .dron__aspas { animation: none; } }
 </style>
