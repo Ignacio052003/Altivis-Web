@@ -30,8 +30,8 @@ export const site = {
   // se ve mientras el vídeo carga.
   // Recomendado: MP4 H.264, 1920×1080, 10–15 s en bucle, sin sonido, < 6 MB.
   video: {
-    portada: null as string | null, // p. ej. '/video/reel-portada.mp4'
-    puertaGrabacion: null as string | null,
+    portada: '/video/01-cabecera.mp4' as string | null, // provisional (Pixabay)
+    puertaGrabacion: '/video/02a-puerta-grabacion.mp4' as string | null, // provisional (Pixabay)
     puertaTaller: null as string | null,
     grabacion: null as string | null,
     taller: null as string | null,

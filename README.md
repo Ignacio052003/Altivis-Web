@@ -37,6 +37,8 @@ Es lo que más va a cambiar la web. Cada cabecera admite un vídeo en lugar de l
 2. Guárdalo en `public/video/` (p. ej. `public/video/reel-portada.mp4`).
 3. Pon la ruta en `src/config/site.ts` → `video.portada: '/video/reel-portada.mp4'`.
 
+**Vídeos provisionales:** `01-cabecera` y `02a-puerta-grabacion` son de Pixabay (licencia libre) y están solo como referencia hasta tener los de Juan.
+
 Las fotos están en `src/assets/photos/` y se optimizan solas al compilar (WebP en varios tamaños).
 
 ## Trabajar en local
