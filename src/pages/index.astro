@@ -4,6 +4,7 @@ import Base from '../layouts/Base.astro';
 import Hero from '../components/Hero.astro';
 import Contacto from '../components/Contacto.astro';
 import Resenas from '../components/Resenas.astro';
+import Toma from '../components/Toma.astro';
 import { site } from '../config/site';
 import { usosGrabacion } from '../data/contenido';
 import { u } from '../lib/url';
@@ -44,7 +45,7 @@ import danos from '../assets/photos/valoracion-danos.jpg';
   <!-- Dos puertas -->
   <section class="puertas" aria-label="Elige qué necesitas">
     <a class="puerta" href={u('/grabacion')}>
-      <Image src={coche} alt="" widths={[640, 960, 1400]} sizes="(max-width: 900px) 100vw, 60vw" />
+      <Toma imagen={coche} alt="" video={site.video.puertaGrabacion} sizes="(max-width: 900px) 100vw, 60vw" class="puerta__media" />
       <div class="puerta__texto">
         <h2 class="display t-xl">Grabación</h2>
         <p>Bodas, hoteles, fincas, vehículos y marcas en Sevilla y alrededores.</p>
@@ -52,7 +53,7 @@ import danos from '../assets/photos/valoracion-danos.jpg';
       </div>
     </a>
     <a class="puerta" href={u('/taller')}>
-      <Image src={soldadura} alt="" widths={[640, 960, 1400]} sizes="(max-width: 900px) 100vw, 60vw" />
+      <Toma imagen={soldadura} alt="" video={site.video.puertaTaller} sizes="(max-width: 900px) 100vw, 60vw" class="puerta__media" />
       <div class="puerta__texto">
         <h2 class="display t-xl">Taller</h2>
         <p>Reparación, montaje y puesta a punto para pilotos de toda España.</p>
@@ -143,14 +144,14 @@ import danos from '../assets/photos/valoracion-danos.jpg';
   .puertas { display: flex; height: min(92svh, 900px); min-height: 560px; border-top: 1px solid var(--linea); }
   .puerta { position: relative; flex: 1; overflow: hidden; text-decoration: none; color: var(--cal); transition: flex-grow .9s var(--ease); isolation: isolate; }
   .puerta + .puerta { border-left: 1px solid var(--linea); }
-  .puerta :global(img) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; transform: scale(1.04); transition: transform 1.4s var(--ease), filter .9s; filter: brightness(.62) saturate(.9); }
+  .puerta :global(.puerta__media) { position: absolute; inset: 0; z-index: -2; transform: scale(1.04); transition: transform 1.4s var(--ease), filter .9s; filter: brightness(.62) saturate(.9); }
   .puerta::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(0deg, rgba(3,4,3,.9), rgba(3,4,3,0) 60%); }
   .puerta__texto { position: absolute; left: 0; right: 0; bottom: 0; padding: clamp(28px, 4vw, 64px); display: grid; gap: 16px; justify-items: start; }
   .puerta__texto p { max-width: 34ch; color: rgba(242,243,238,.82); font-size: 1.1rem; }
   @media (hover: hover) and (min-width: 900px) {
     .puertas:hover .puerta { flex-grow: .7; }
     .puertas .puerta:hover { flex-grow: 1.5; }
-    .puerta:hover :global(img) { transform: scale(1); filter: brightness(.8) saturate(1); }
+    .puerta:hover :global(.puerta__media) { transform: scale(1); filter: brightness(.8) saturate(1); }
   }
   @media (max-width: 900px) {
     .puertas { flex-direction: column; height: auto; }
