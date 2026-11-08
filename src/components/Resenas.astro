@@ -1,0 +1,28 @@
+---
+import { resenas } from '../data/contenido';
+// Solo se muestra cuando hay reseñas reales en src/data/contenido.ts
+---
+{resenas.length > 0 && (
+  <section class="bloque resenas" aria-labelledby="resenas-titulo">
+    <div class="wrap">
+      <h2 id="resenas-titulo" class="display t-l">Lo que dicen</h2>
+      <div class="resenas__lista">
+        {resenas.map((r) => (
+          <figure>
+            <blockquote>“{r.texto}”</blockquote>
+            <figcaption><strong>{r.nombre}</strong> · {r.servicio}</figcaption>
+          </figure>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
+
+<style>
+  .resenas { border-top: 1px solid var(--linea); }
+  .resenas__lista { margin-top: 64px; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 48px; }
+  .resenas figure { margin: 0; display: grid; gap: 24px; align-content: start; }
+  .resenas blockquote { margin: 0; font-size: 1.45rem; line-height: 1.35; font-weight: 600; font-stretch: 105%; }
+  .resenas figcaption { color: var(--gris); }
+  .resenas strong { color: var(--cal); font-weight: 650; }
+</style>

@@ -1,0 +1,29 @@
+---
+import { u } from '../lib/url';
+// Secuencia de armado: los cuatro motores arrancan y el dron despega.
+// Solo la primera visita de la sesión. Sin JavaScript no aparece.
+---
+<div class="intro" data-intro aria-hidden="true">
+  <div class="intro__centro">
+    <img src={u('/brand/isotipo-blanco.png')} alt="" width="160" height="92" />
+    <div class="intro__motores">
+      <span data-motor></span><span data-motor></span><span data-motor></span><span data-motor></span>
+    </div>
+    <p class="osd" data-intro-estado>DESARMADO</p>
+  </div>
+</div>
+
+<style>
+  .intro { display: none; }
+  :global(html.js-intro) .intro {
+    display: grid; place-items: center;
+    position: fixed; inset: 0; z-index: 150; background: var(--negro);
+  }
+  .intro__centro { display: grid; justify-items: center; gap: 26px; }
+  .intro__centro img { width: 88px; height: auto; }
+  .intro__motores { display: grid; grid-template-columns: repeat(4, 34px); gap: 8px; }
+  .intro__motores span { height: 4px; background: var(--grafito); position: relative; overflow: hidden; }
+  .intro__motores span::after { content: ''; position: absolute; inset: 0; background: var(--salvia); transform: scaleX(var(--p, 0)); transform-origin: left; }
+  .intro p { font-size: 14px; letter-spacing: .2em; color: var(--gris); }
+  .intro p.es-armado { color: var(--salvia); }
+</style>

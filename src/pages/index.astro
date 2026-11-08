@@ -1,0 +1,203 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import Contacto from '../components/Contacto.astro';
+import Resenas from '../components/Resenas.astro';
+import { site } from '../config/site';
+import { usosGrabacion } from '../data/contenido';
+import { u } from '../lib/url';
+import chalet from '../assets/photos/chalet-aereo.jpg';
+import coche from '../assets/photos/seguimiento-coche.jpg';
+import soldadura from '../assets/photos/taller-soldadura.jpg';
+import montaje from '../assets/photos/montaje-blanco.jpg';
+import cinewhoop from '../assets/photos/cinewhoop.jpg';
+import danos from '../assets/photos/valoracion-danos.jpg';
+---
+<Base
+  titulo="Altivis Studio · Vídeo con dron FPV y taller de drones en Sevilla"
+  descripcion="Grabación aérea con dron FPV en Sevilla para bodas, espacios, vehículos y marcas. Taller de reparación y montaje de drones FPV con envíos a toda España."
+>
+  <Hero
+    lineas={['El plano que', 'no se puede grabar', 'desde el suelo.']}
+    texto="Vídeo aéreo con dron FPV en Sevilla para bodas, espacios y marcas. Y un taller para pilotos que quieren volver a volar."
+    imagen={chalet}
+    alt="Finca con jardín y jacarandas grabada desde el aire"
+    video={site.video.portada}
+    posicion="center 45%"
+  >
+    <a class="boton boton--salvia" href={u('/grabacion')}>Quiero grabar</a>
+    <a class="boton boton--borde" href={u('/taller')}>Reparar mi dron</a>
+  </Hero>
+
+  <!-- Manifiesto -->
+  <section class="bloque manifiesto">
+    <div class="wrap">
+      <p class="manifiesto__texto" data-palabras>
+        No hago fotos desde arriba. Vuelo dentro de las cosas: entro por la puerta, cruzo el salón, salgo por la ventana y subo hasta que se ve todo. Eso es el FPV. Una cámara que vuela como la imaginas.
+      </p>
+      <p class="manifiesto__firma">{site.piloto}, piloto de {site.nombre}</p>
+    </div>
+  </section>
+
+  <!-- Dos puertas -->
+  <section class="puertas" aria-label="Elige qué necesitas">
+    <a class="puerta" href={u('/grabacion')}>
+      <Image src={coche} alt="" widths={[640, 960, 1400]} sizes="(max-width: 900px) 100vw, 60vw" />
+      <div class="puerta__texto">
+        <h2 class="display t-xl">Grabación</h2>
+        <p>Bodas, hoteles, fincas, vehículos y marcas en Sevilla y alrededores.</p>
+        <span class="enlace">Ver qué grabo</span>
+      </div>
+    </a>
+    <a class="puerta" href={u('/taller')}>
+      <Image src={soldadura} alt="" widths={[640, 960, 1400]} sizes="(max-width: 900px) 100vw, 60vw" />
+      <div class="puerta__texto">
+        <h2 class="display t-xl">Taller</h2>
+        <p>Reparación, montaje y puesta a punto para pilotos de toda España.</p>
+        <span class="enlace">Arreglar mi dron</span>
+      </div>
+    </a>
+  </section>
+
+  <!-- Tira de fotogramas -->
+  <section class="tira" data-tira aria-labelledby="tira-titulo">
+    <div class="tira__pista" data-tira-pista>
+      <div class="tira__cabeza">
+        <h2 id="tira-titulo" class="display t-xl">Lo que grabo</h2>
+        <p class="lead">Cuatro tipos de encargo, una misma idea: llevar la cámara por donde nadie puede llevarla.</p>
+      </div>
+      {usosGrabacion.map((uso) => (
+        <figure class="fotograma">
+          <div class="fotograma__img">
+            <Image src={uso.foto} alt={uso.alt} widths={[640, 960, 1400]} sizes="(max-width: 900px) 100vw, 62vw" />
+            <span class="fotograma__esq" aria-hidden="true"></span>
+          </div>
+          <figcaption>
+            <h3 class="t-m">{uso.titulo}</h3>
+            <p>{uso.texto}</p>
+          </figcaption>
+        </figure>
+      ))}
+      <div class="tira__fin">
+        <p class="display t-l">¿Tienes un sitio que enseñar?</p>
+        <a class="boton boton--salvia" href={u('/grabacion')}>Ver la grabación</a>
+      </div>
+    </div>
+    <div class="tira__barra" aria-hidden="true"><span data-tira-progreso></span></div>
+  </section>
+
+  <!-- Taller -->
+  <section class="bloque tema-cal taller-intro" data-tema="cal">
+    <div class="wrap taller-intro__grid">
+      <div class="taller-intro__texto">
+        <h2 class="display t-xl">Tu dron, otra vez en el aire.</h2>
+        <ul class="promesas">
+          <li><strong>Diagnóstico antes de tocar nada.</strong> Sabes qué falla y cuánto cuesta antes de decidir.</li>
+          <li><strong>Prueba de vuelo antes de devolverlo.</strong> Sale configurado y volado.</li>
+          <li><strong>Desde cualquier punto de España.</strong> Me lo mandas por mensajería y te vuelve a casa.</li>
+        </ul>
+        <a class="boton boton--negro" href={u('/taller')}>Ver el taller y qué arreglo</a>
+      </div>
+      <div class="taller-intro__fotos">
+        <Image src={montaje} alt="Dron FPV blanco recién montado" widths={[480, 800]} sizes="(max-width: 900px) 50vw, 24vw" />
+        <Image src={cinewhoop} alt="Cinewhoop con cámara de acción" widths={[480, 800]} sizes="(max-width: 900px) 50vw, 24vw" />
+        <Image src={danos} alt="Soporte de cámara roto tras un golpe" widths={[480, 800]} sizes="(max-width: 900px) 50vw, 24vw" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Sobre mí -->
+  <section class="bloque sobre">
+    <div class="wrap sobre__grid">
+      <h2 class="display t-xl">Hola, soy {site.piloto}.</h2>
+      <div class="sobre__texto">
+        <p class="t-m">Monto, reparo y vuelo mis propios drones. Con ellos grabo lo que no se puede grabar desde el suelo.</p>
+        <p class="lead">Trabajo solo, así que hablas siempre conmigo: del primer mensaje a la entrega. Si algo no se puede volar, te lo digo antes de que pagues nada.</p>
+        {(site.numeroOperador || site.seguro) && (
+          <ul class="sobre__datos">
+            {site.numeroOperador && <li>Operador UAS registrado · {site.numeroOperador}</li>}
+            {site.seguro && <li>{site.seguro}</li>}
+          </ul>
+        )}
+        <a class="enlace" href={`https://www.instagram.com/${site.instagram}/`} target="_blank" rel="noopener">Más vuelos en @{site.instagram}</a>
+      </div>
+    </div>
+  </section>
+
+  <Resenas />
+
+  <Contacto />
+</Base>
+
+<style>
+  /* Manifiesto */
+  .manifiesto__texto {
+    font-size: clamp(1.9rem, 4.4vw, 4.6rem); line-height: 1.08; font-weight: 700; font-stretch: 112%;
+    letter-spacing: -0.02em; max-width: 24ch;
+  }
+  .manifiesto__firma { margin-top: 48px; color: var(--gris); }
+
+  /* Puertas */
+  .puertas { display: flex; height: min(92svh, 900px); min-height: 560px; border-top: 1px solid var(--linea); }
+  .puerta { position: relative; flex: 1; overflow: hidden; text-decoration: none; color: var(--cal); transition: flex-grow .9s var(--ease); isolation: isolate; }
+  .puerta + .puerta { border-left: 1px solid var(--linea); }
+  .puerta :global(img) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; transform: scale(1.04); transition: transform 1.4s var(--ease), filter .9s; filter: brightness(.62) saturate(.9); }
+  .puerta::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(0deg, rgba(3,4,3,.9), rgba(3,4,3,0) 60%); }
+  .puerta__texto { position: absolute; left: 0; right: 0; bottom: 0; padding: clamp(28px, 4vw, 64px); display: grid; gap: 16px; justify-items: start; }
+  .puerta__texto p { max-width: 34ch; color: rgba(242,243,238,.82); font-size: 1.1rem; }
+  @media (hover: hover) and (min-width: 900px) {
+    .puertas:hover .puerta { flex-grow: .7; }
+    .puertas .puerta:hover { flex-grow: 1.5; }
+    .puerta:hover :global(img) { transform: scale(1); filter: brightness(.8) saturate(1); }
+  }
+  @media (max-width: 900px) {
+    .puertas { flex-direction: column; height: auto; }
+    .puerta { min-height: 72svh; }
+    .puerta + .puerta { border-left: 0; border-top: 1px solid var(--linea); }
+  }
+
+  /* Tira */
+  .tira { position: relative; overflow: hidden; border-top: 1px solid var(--linea); }
+  .tira__pista { display: flex; align-items: center; gap: clamp(24px, 3vw, 48px); padding: 0 var(--gutter); height: 100svh; width: max-content; }
+  .tira__cabeza { width: min(34vw, 460px); flex: none; display: grid; gap: 24px; }
+  .fotograma { margin: 0; flex: none; width: min(60vw, 980px); display: grid; gap: 22px; }
+  .fotograma__img { position: relative; aspect-ratio: 16 / 9; overflow: hidden; background: var(--grafito); }
+  .fotograma__img :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .fotograma__esq { position: absolute; inset: 16px; pointer-events: none;
+    background:
+      linear-gradient(#fff, #fff) top left / 22px 1.5px, linear-gradient(#fff, #fff) top left / 1.5px 22px,
+      linear-gradient(#fff, #fff) top right / 22px 1.5px, linear-gradient(#fff, #fff) top right / 1.5px 22px,
+      linear-gradient(#fff, #fff) bottom left / 22px 1.5px, linear-gradient(#fff, #fff) bottom left / 1.5px 22px,
+      linear-gradient(#fff, #fff) bottom right / 22px 1.5px, linear-gradient(#fff, #fff) bottom right / 1.5px 22px;
+    background-repeat: no-repeat; opacity: .8; }
+  .fotograma figcaption { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: 32px; align-items: baseline; }
+  .fotograma figcaption p { color: var(--gris); max-width: 46ch; }
+  .tira__fin { flex: none; width: min(34vw, 460px); display: grid; gap: 28px; justify-items: start; }
+  .tira__barra { position: absolute; left: var(--gutter); right: var(--gutter); bottom: 40px; height: 1.5px; background: var(--linea); }
+  .tira__barra span { display: block; height: 100%; background: var(--salvia); transform-origin: left; transform: scaleX(0); }
+  @media (max-width: 899px) {
+    .tira { padding-block: 96px; }
+    .tira__pista { flex-direction: column; align-items: stretch; height: auto; width: auto; gap: 64px; }
+    .tira__cabeza, .fotograma, .tira__fin { width: auto; }
+    .fotograma figcaption { grid-template-columns: 1fr; gap: 10px; }
+    .tira__barra { display: none; }
+  }
+
+  /* Taller */
+  .taller-intro__grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 64px clamp(40px, 7vw, 120px); align-items: center; }
+  .taller-intro__texto { display: grid; gap: 40px; justify-items: start; }
+  .promesas { list-style: none; margin: 0; padding: 0; display: grid; border-top: 1px solid rgba(17,20,16,.14); }
+  .promesas li { padding: 20px 0; border-bottom: 1px solid rgba(17,20,16,.14); color: var(--gris-osc); font-size: 1.08rem; }
+  .promesas strong { display: block; color: var(--tinta); font-size: 1.2rem; font-weight: 700; font-stretch: 108%; margin-bottom: 4px; }
+  .taller-intro__fotos { display: grid; grid-template-columns: 1.2fr 1fr; grid-template-rows: repeat(2, clamp(170px, 19vw, 280px)); gap: 14px; }
+  .taller-intro__fotos :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .taller-intro__fotos :global(img:first-child) { grid-row: span 2; }
+  @media (max-width: 900px) { .taller-intro__grid { grid-template-columns: 1fr; } }
+
+  /* Sobre mí */
+  .sobre__grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px clamp(40px, 7vw, 120px); align-items: start; }
+  .sobre__texto { display: grid; gap: 28px; justify-items: start; }
+  .sobre__datos { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; color: var(--salvia); }
+  @media (max-width: 900px) { .sobre__grid { grid-template-columns: 1fr; } }
+</style>

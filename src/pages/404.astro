@@ -1,0 +1,27 @@
+---
+import Base from '../layouts/Base.astro';
+import { u } from '../lib/url';
+---
+<Base titulo="Señal perdida · Altivis Studio" descripcion="Esta página no existe.">
+  <section class="perdida">
+    <div class="perdida__ruido" aria-hidden="true"></div>
+    <div class="wrap perdida__texto">
+      <p class="osd">SIN SEÑAL</p>
+      <h1 class="display t-xl">Esta página no existe.</h1>
+      <p class="lead">Puede que el enlace esté mal escrito o que la página se haya movido.</p>
+      <a class="boton boton--salvia" href={u('/')}>Volver al inicio</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .perdida { position: relative; min-height: 100svh; display: grid; align-items: center; overflow: hidden; }
+  .perdida__ruido {
+    position: absolute; inset: -20%; opacity: .16;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    animation: estatica .25s steps(3) infinite;
+  }
+  @keyframes estatica { 33% { transform: translate(-4%, 3%); } 66% { transform: translate(3%, -2%); } }
+  .perdida__texto { position: relative; display: grid; gap: 28px; justify-items: start; }
+  .perdida__texto .osd { color: var(--albero); font-size: 1.1rem; letter-spacing: .2em; }
+</style>
