@@ -31,7 +31,14 @@ export const site = {
     portada: null as string | null, // p. ej. '/video/reel-portada.mp4'
     grabacion: null as string | null,
     taller: null as string | null,
+    // Comparativa de grabación: el mismo tipo de sitio con cada dron
+    dronNormal: null as string | null,
+    fpv: null as string | null,
+    cinewhoop: null as string | null,
   },
+
+  // Plazo habitual de entrega de un vídeo, p. ej. '7 días'. Si es null no se muestra.
+  plazoEntrega: null as string | null,
 
   // Cloudflare Web Analytics (gratis, sin cookies). Pega aquí el token.
   analyticsToken: null as string | null,

@@ -2,7 +2,7 @@
 import '@fontsource-variable/archivo/wdth.css';
 import '@fontsource/share-tech-mono/index.css';
 import '../styles/global.css';
-import Nav from '../components/Nav.astro';
+import Nav, { type Mundo } from '../components/Nav.astro';
 import Hud from '../components/Hud.astro';
 import Footer from '../components/Footer.astro';
 import Intro from '../components/Intro.astro';
@@ -13,8 +13,9 @@ interface Props {
   titulo: string;
   descripcion: string;
   imagen?: string;
+  mundo?: Mundo;
 }
-const { titulo, descripcion, imagen = '/og.jpg' } = Astro.props;
+const { titulo, descripcion, imagen = '/og.jpg', mundo = 'neutro' } = Astro.props;
 const canonica = new URL(Astro.url.pathname, Astro.site);
 const imagenAbs = new URL(u(imagen), Astro.site);
 
@@ -74,15 +75,15 @@ const jsonLd = {
     <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon={JSON.stringify({ token: site.analyticsToken })}></script>
   )}
 </head>
-<body>
+<body data-mundo={mundo}>
   <a class="skip" href="#contenido">Saltar al contenido</a>
   <Intro />
-  <Nav />
+  <Nav mundo={mundo} />
   <main id="contenido">
     <slot />
   </main>
   <Footer />
-  <Hud />
+  <Hud modo={mundo === 'grabacion' ? 'minimo' : 'completo'} />
   <div class="grano" aria-hidden="true"></div>
 
   <script>
