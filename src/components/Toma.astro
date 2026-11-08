@@ -16,7 +16,7 @@ const { imagen, alt, video, sizes = '100vw', posicion = 'center', class: clase }
 ---
 <div class:list={['toma', clase]}>
   {video ? (
-    <video src={u(video)} autoplay muted loop playsinline preload="metadata" aria-label={alt} style={`object-position:${posicion}`}></video>
+    <video src={u(video)} poster={u(video.replace(/\.mp4$/i, '.jpg'))} autoplay muted loop playsinline preload="metadata" aria-label={alt} style={`object-position:${posicion}`}></video>
   ) : (
     <Image src={imagen} alt={alt} widths={[640, 960, 1400, 2000]} sizes={sizes} style={`object-position:${posicion}`} />
   )}

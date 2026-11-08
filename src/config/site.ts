@@ -25,10 +25,14 @@ export const site = {
   numeroOperador: null as string | null, // p. ej. 'ESP-OP-123456789'
   seguro: null as string | null, // p. ej. 'Seguro de responsabilidad civil con Mapfre'
 
-  // Vídeos de portada (archivos en /public/video/). Si es null se usa la foto.
+  // Vídeos (archivos en /public/video/). Si es null se usa la foto.
+  // Pon junto a cada vídeo una imagen .jpg con el mismo nombre (su primer fotograma):
+  // se ve mientras el vídeo carga.
   // Recomendado: MP4 H.264, 1920×1080, 10–15 s en bucle, sin sonido, < 6 MB.
   video: {
     portada: null as string | null, // p. ej. '/video/reel-portada.mp4'
+    puertaGrabacion: null as string | null,
+    puertaTaller: null as string | null,
     grabacion: null as string | null,
     taller: null as string | null,
     // Comparativa de grabación: el mismo tipo de sitio con cada dron
