@@ -50,59 +50,50 @@ export const piezasDron = [
 export const usosGrabacion = [
   {
     titulo: 'Bodas y eventos',
-    texto: 'La llegada, la salida de la iglesia, la finca entera en un solo plano. Lo que el resto de cámaras no puede contar.',
+    texto: 'La llegada, la salida, la finca entera. En un solo plano.',
     foto: chalet,
     alt: 'Finca con jardín y jacarandas vista desde el aire',
   },
   {
     titulo: 'Hoteles, restaurantes y espacios',
-    texto: 'Un recorrido que entra por la puerta, cruza el salón y sale a la terraza. Tu espacio contado en treinta segundos.',
+    texto: 'Entra por la puerta, cruza el salón y sale a la terraza.',
     foto: cinewhoop,
     alt: 'Cinewhoop con cámara de acción, el dron que vuela en interiores',
   },
   {
     titulo: 'Vehículos y deporte',
-    texto: 'Seguimiento a la velocidad real: coches, motos, bicis, caballos. Pegado a la acción y sin grúa.',
+    texto: 'Coches, motos, bicis, caballos. Pegado a la acción.',
     foto: coche,
     alt: 'Seguimiento aéreo de un coche por una carretera de montaña',
   },
   {
     titulo: 'Inmobiliaria y centros',
-    texto: 'Viviendas, colegios, clubes y naves. El exterior, el entorno y el interior en una sola pieza.',
+    texto: 'Viviendas, colegios, clubes y naves. Dentro y fuera.',
     foto: centro,
     alt: 'Patio de un centro educativo grabado a baja altura',
   },
 ];
 
 export const drones = [
-  { nombre: 'Estabilizado', para: 'Planos aéreos suaves, altura y fotografía.', como: 'El dron que todos conocen. Sube, gira despacio y enseña el conjunto.' },
-  { nombre: 'FPV', para: 'Velocidad, picados y seguimientos.', como: 'Lo piloto con gafas, en manual. Se mueve como una cámara que vuela.' },
-  { nombre: 'Cinewhoop', para: 'Interiores y vuelo cerca de personas.', como: 'Pequeño y con protecciones. Atraviesa puertas y pasillos con seguridad.' },
+  { nombre: 'Dron normal', texto: 'Desde arriba y despacio. Enseña el sitio entero.' },
+  { nombre: 'FPV', texto: 'Rápido y cerca, como un pájaro. Persigue la acción.' },
+  { nombre: 'Cinewhoop', texto: 'Pequeño y con las hélices protegidas. Vuela dentro de los sitios y cerca de la gente.' },
+];
+
+/** Lo que recibe siempre el cliente de grabación. */
+export const entregables = [
+  'Vídeo editado y listo para publicar',
+  'En horizontal y en vertical',
+  'Los permisos de vuelo, de mi cuenta',
+  'Precio cerrado antes de grabar',
 ];
 
 export type Paquete = Precio & { nombre: string; para: string; incluye: string[] };
 
 export const paquetesGrabacion: Paquete[] = [
-  {
-    nombre: 'Un espacio',
-    para: 'Para enseñar un lugar: una casa, un hotel, un restaurante.',
-    incluye: ['Una localización', 'Recorrido FPV de interior y exterior', 'Pieza editada en horizontal y vertical'],
-    precio: null,
-    desde: true,
-  },
-  {
-    nombre: 'Boda o evento',
-    para: 'Para el día que no se repite.',
-    incluye: ['Llegada, ceremonia y finca', 'Coordinación con tu fotógrafo y videógrafo', 'Material editado o en bruto'],
-    precio: null,
-    desde: true,
-  },
-  {
-    nombre: 'Campaña',
-    para: 'Para marcas, vehículos y proyectos con guion.',
-    incluye: ['Jornada o media jornada', 'Varias localizaciones', 'Entregas adaptadas a cada red'],
-    precio: null,
-  },
+  { nombre: 'Un espacio', para: 'Tu casa, tu hotel, tu restaurante.', incluye: [], precio: null, desde: true },
+  { nombre: 'Boda o evento', para: 'El día que no se repite.', incluye: [], precio: null, desde: true },
+  { nombre: 'A medida', para: 'Vehículos, marcas y todo lo demás.', incluye: [], precio: null },
 ];
 
 /* ---------- OPINIONES ----------
@@ -115,11 +106,12 @@ export const resenas: { texto: string; nombre: string; servicio: string }[] = []
 /* ---------- PREGUNTAS ---------- */
 
 export const faqGrabacion = [
-  { p: '¿Hacen falta permisos para grabar en mi zona?', r: 'Depende del lugar. Compruebo la zona de vuelo y tramito las autorizaciones y comunicaciones que correspondan. La fecha se confirma cuando están aprobadas.' },
-  { p: '¿Con cuánta antelación tengo que pedirlo?', r: 'Si la zona exige autorización, la tramitación puede llevar hasta 30 días. En zonas sin restricciones puede ser mucho antes. Escríbeme con la fecha y te digo.' },
-  { p: '¿Es seguro volar cerca de los invitados?', r: 'Para eso está el cinewhoop: es pequeño, ligero y lleva las hélices protegidas. Cada vuelo se planifica con el espacio y la gente que habrá.' },
-  { p: '¿Me das el vídeo editado o en bruto?', r: 'Como prefieras: editado, en bruto o ambos, en horizontal para web y en vertical para redes.' },
-  { p: '¿Trabajas fuera de Sevilla?', r: 'Sí. Sevilla y alrededores es mi zona habitual; fuera de ella sumo el desplazamiento al presupuesto.' },
+  { p: '¿Qué diferencia hay entre un dron normal y uno FPV?', r: 'El normal graba desde arriba y despacio. El FPV vuela rápido, cerca y por dentro de los sitios.' },
+  { p: '¿Y qué es un cinewhoop?', r: 'Un FPV pequeño con las hélices protegidas. Es el que entra en casas, hoteles y salones.' },
+  { p: '¿Tengo que pedir algún permiso?', r: 'No. Lo compruebo y lo tramito yo.' },
+  { p: '¿Con cuánta antelación lo pido?', r: 'Cuanto antes. Algunas zonas necesitan autorización y puede tardar hasta 30 días.' },
+  { p: '¿Es seguro con gente alrededor?', r: 'Cada vuelo se planifica según el sitio y la gente que habrá. Dentro uso el cinewhoop, que lleva las hélices protegidas.' },
+  { p: '¿Trabajas fuera de Sevilla?', r: 'Sí. Fuera de Sevilla y alrededores sumo el desplazamiento.' },
 ];
 
 export const faqTaller = [

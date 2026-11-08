@@ -3,25 +3,57 @@ import { site, whatsappUrl } from '../config/site';
 import { u } from '../lib/url';
 import Icono from './Icono.astro';
 
-const actual = Astro.url.pathname.replace(import.meta.env.BASE_URL.replace(/\/$/, ''), '').replace(/\/$/, '') || '/';
-const enlaces = [
-  { href: '/grabacion', texto: 'Grabación' },
-  { href: '/taller', texto: 'Taller' },
-  { href: '/videografos', texto: 'Para videógrafos' },
-];
+export type Mundo = 'inicio' | 'grabacion' | 'taller' | 'neutro';
+interface Props { mundo?: Mundo }
+const { mundo = 'neutro' } = Astro.props;
+
+// Cada parte de la web tiene su propio menú; la otra parte queda como un salto discreto.
+const menus: Record<Mundo, { enlaces: { href: string; texto: string }[]; salto?: { href: string; texto: string }; cta: { href: string; texto: string; externo?: boolean }; etiqueta?: string }> = {
+  inicio: {
+    enlaces: [{ href: u('/grabacion'), texto: 'Grabación' }, { href: u('/taller'), texto: 'Taller' }],
+    cta: { href: whatsappUrl(), texto: 'Escríbeme', externo: true },
+  },
+  neutro: {
+    enlaces: [{ href: u('/grabacion'), texto: 'Grabación' }, { href: u('/taller'), texto: 'Taller' }],
+    cta: { href: whatsappUrl(), texto: 'Escríbeme', externo: true },
+  },
+  grabacion: {
+    etiqueta: 'Grabación',
+    enlaces: [
+      { href: '#que-grabo', texto: 'Qué grabo' },
+      { href: '#como', texto: 'Cómo funciona' },
+      { href: '#precios', texto: 'Precios' },
+      { href: '#preguntas', texto: 'Preguntas' },
+    ],
+    salto: { href: u('/taller'), texto: 'Ir al taller' },
+    cta: { href: '#contacto', texto: 'Pedir propuesta' },
+  },
+  taller: {
+    etiqueta: 'Taller',
+    enlaces: [
+      { href: '#averia', texto: 'Averías' },
+      { href: '#precios', texto: 'Precios' },
+      { href: '#envio', texto: 'Envíos' },
+      { href: '#preguntas', texto: 'Preguntas' },
+    ],
+    salto: { href: u('/grabacion'), texto: 'Ir a grabación' },
+    cta: { href: '#contacto', texto: 'Pedir diagnóstico' },
+  },
+};
+const m = menus[mundo];
 ---
 <header class="nav" data-nav>
   <div class="nav__barra">
     <a class="nav__marca" href={u('/')} aria-label={`${site.nombre}, inicio`}>
       <img src={u('/brand/logo-blanco.png')} alt={site.nombre} width="520" height="103" />
     </a>
+    {m.etiqueta && <span class="nav__etiqueta">{m.etiqueta}</span>}
     <nav class="nav__enlaces" aria-label="Principal">
-      {enlaces.map((e) => (
-        <a href={u(e.href)} aria-current={actual === e.href ? 'page' : undefined}>{e.texto}</a>
-      ))}
+      {m.enlaces.map((e) => <a href={e.href}>{e.texto}</a>)}
+      {m.salto && <a class="nav__salto" href={m.salto.href}>{m.salto.texto}</a>}
     </nav>
-    <a class="boton boton--salvia nav__cta" href={whatsappUrl()} target="_blank" rel="noopener">
-      <Icono nombre="chat" />Escríbeme
+    <a class="boton boton--salvia nav__cta" href={m.cta.href} target={m.cta.externo ? '_blank' : undefined} rel={m.cta.externo ? 'noopener' : undefined}>
+      <Icono nombre="chat" />{m.cta.texto}
     </a>
     <button class="nav__abrir" type="button" aria-expanded="false" aria-controls="menu-movil" data-menu-abrir>
       <Icono nombre="menu" /><span class="sr-only">Abrir menú</span>
@@ -32,7 +64,8 @@ const enlaces = [
     <button class="menu__cerrar" type="button" data-menu-cerrar><Icono nombre="cerrar" /><span class="sr-only">Cerrar menú</span></button>
     <nav aria-label="Menú móvil">
       <a href={u('/')} class="display">Inicio</a>
-      {enlaces.map((e) => <a href={u(e.href)} class="display">{e.texto}</a>)}
+      {m.enlaces.map((e) => <a href={e.href} class="display">{e.texto}</a>)}
+      {m.salto && <a href={m.salto.href} class="menu__salto">{m.salto.texto}</a>}
     </nav>
     <div class="menu__pie">
       <a class="boton boton--salvia" href={whatsappUrl()} target="_blank" rel="noopener"><Icono nombre="chat" />{site.telefono}</a>
@@ -55,8 +88,11 @@ const enlaces = [
   .nav__marca img { width: 168px; height: auto; transition: filter .4s; }
   .nav__enlaces { display: flex; gap: 34px; margin-left: auto; font-size: .98rem; font-weight: 550; }
   .nav__enlaces a { text-decoration: none; opacity: .78; transition: opacity .2s; }
-  .nav__enlaces a:hover, .nav__enlaces a[aria-current='page'] { opacity: 1; }
-  .nav__enlaces a[aria-current='page'] { text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 6px; }
+  .nav__enlaces a:hover { opacity: 1; }
+  .nav__etiqueta { padding-left: 18px; margin-left: -14px; border-left: 1.5px solid currentColor; font-weight: 650; font-size: .98rem; opacity: .9; }
+  .nav__salto { padding-left: 26px; border-left: 1px solid currentColor; opacity: .55 !important; }
+  .nav__salto:hover { opacity: 1 !important; }
+  .menu__salto { font-size: 1.1rem; color: var(--gris); margin-top: 12px; }
   .nav__cta { min-height: 46px; padding: 0 22px; }
   .nav__abrir { display: none; margin-left: auto; width: 48px; height: 48px; border: 0; background: transparent; cursor: pointer; padding: 10px; }
 
@@ -72,6 +108,7 @@ const enlaces = [
 
   @media (max-width: 900px) {
     .nav__enlaces, .nav__cta { display: none; }
+    .nav__etiqueta { font-size: .9rem; padding-left: 12px; margin-left: -8px; }
     .nav__abrir { display: block; }
     .nav__barra { padding: 16px 22px; }
     .nav__marca img { width: 140px; }

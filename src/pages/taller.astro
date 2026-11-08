@@ -23,12 +23,13 @@ const galeria = [
 ];
 ---
 <Base
+  mundo="taller"
   titulo="Taller de drones FPV · Reparación y montaje con envíos a toda España · Altivis Studio"
   descripcion="Reparación, montaje, configuración, impermeabilización y baterías para drones FPV. Diagnóstico antes de tocar nada y prueba de vuelo antes de devolverlo. Envíos a toda España desde Sevilla."
 >
   <Hero
     lineas={['Tu dron,', 'otra vez', 'en el aire.']}
-    texto="Reparación, montaje y puesta a punto de drones FPV. En mano en Sevilla o por mensajería desde cualquier punto de España."
+    texto="Reparación, montaje y puesta a punto de drones FPV. En mano en Sevilla o por mensajería desde toda España."
     imagen={soldadura}
     alt="Soldadura de la electrónica de un dron FPV en el taller"
     video={site.video.taller}
@@ -51,7 +52,7 @@ const galeria = [
     </section>
 
     <!-- Servicios y precios -->
-    <section class="bloque servicios-sec" aria-labelledby="servicios-titulo">
+    <section class="bloque servicios-sec" id="precios" aria-labelledby="servicios-titulo">
       <div class="wrap servicios-grid">
         <div class="cabecera cabecera--pegada">
           <h2 id="servicios-titulo" class="display t-xl">Qué arreglo</h2>
@@ -74,7 +75,7 @@ const galeria = [
     </section>
 
     <!-- Envío -->
-    <section class="bloque envio" aria-labelledby="envio-titulo">
+    <section class="bloque envio" id="envio" aria-labelledby="envio-titulo">
       <div class="wrap">
         <div class="cabecera">
           <h2 id="envio-titulo" class="display t-xl">¿No estás en Sevilla? Mándamelo.</h2>

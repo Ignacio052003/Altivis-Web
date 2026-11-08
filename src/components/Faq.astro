@@ -1,8 +1,8 @@
 ---
-interface Props { preguntas: { p: string; r: string }[]; titulo?: string; tema?: 'negro' | 'cal' }
-const { preguntas, titulo = 'Preguntas frecuentes', tema = 'negro' } = Astro.props;
+interface Props { preguntas: { p: string; r: string }[]; titulo?: string; tema?: 'negro' | 'cal'; id?: string }
+const { preguntas, titulo = 'Preguntas frecuentes', tema = 'negro', id = 'preguntas' } = Astro.props;
 ---
-<section class:list={['bloque', tema === 'cal' && 'tema-cal']} data-tema={tema === 'cal' ? 'cal' : undefined} aria-labelledby="faq-titulo">
+<section id={id} class:list={['bloque', tema === 'cal' && 'tema-cal']} data-tema={tema === 'cal' ? 'cal' : undefined} aria-labelledby="faq-titulo">
   <div class="wrap faq">
     <h2 id="faq-titulo" class="display t-l">{titulo}</h2>
     <div class="faq__lista">

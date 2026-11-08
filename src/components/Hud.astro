@@ -1,9 +1,11 @@
 ---
+interface Props { modo?: 'completo' | 'minimo' }
+const { modo = 'completo' } = Astro.props;
 // OSD de las gafas FPV. Puramente decorativo: los lectores de pantalla lo ignoran.
 // Batería y altitud bajan a medida que avanzas por la página (el vuelo termina en el contacto);
 // la velocidad sale de la velocidad real de scroll.
 ---
-<div class="hud" aria-hidden="true">
+<div class:list={['hud', modo === 'minimo' && 'hud--minimo']} aria-hidden="true">
   <span class="hud__esq hud__esq--ti"></span>
   <span class="hud__esq hud__esq--td"></span>
   <span class="hud__esq hud__esq--bi"></span>
@@ -51,6 +53,9 @@
   .hud__centro [data-hud-spd], .hud__centro [data-hud-alt] { display: inline-block; min-width: 3ch; text-align: right; }
   .hud__sep { width: 1px; height: 12px; background: currentColor; opacity: .5; }
   .hud small { font-size: 10px; margin-left: 4px; opacity: .75; }
+
+  /* En grabación solo queda lo que entiende cualquiera: el REC y el encuadre. */
+  .hud--minimo .hud__centro, .hud--minimo .hud__bat { display: none; }
 
   @keyframes parpadeo { 50% { opacity: 0; } }
 
