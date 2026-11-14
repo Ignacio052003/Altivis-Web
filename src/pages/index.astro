@@ -5,15 +5,13 @@ import Hero from '../components/Hero.astro';
 import Contacto from '../components/Contacto.astro';
 import Resenas from '../components/Resenas.astro';
 import Toma from '../components/Toma.astro';
+import DronSvg from '../components/DronSvg.astro';
 import { site } from '../config/site';
 import { usosGrabacion } from '../data/contenido';
 import { u } from '../lib/url';
 import chalet from '../assets/photos/chalet-aereo.jpg';
 import coche from '../assets/photos/seguimiento-coche.jpg';
 import soldadura from '../assets/photos/taller-soldadura.jpg';
-import montaje from '../assets/photos/montaje-blanco.jpg';
-import cinewhoop from '../assets/photos/cinewhoop.jpg';
-import danos from '../assets/photos/valoracion-danos.jpg';
 ---
 <Base
   mundo="inicio"
@@ -30,17 +28,17 @@ import danos from '../assets/photos/valoracion-danos.jpg';
   >
     <a class="boton boton--salvia" href={u('/grabacion')}>Quiero grabar</a>
     <a class="boton boton--borde" href={u('/taller')}>Reparar mi dron</a>
-  </Hero>
 
-  <!-- Manifiesto -->
-  <section class="bloque manifiesto">
-    <div class="wrap">
-      <p class="manifiesto__texto" data-palabras>
-        No hago fotos desde arriba. Vuelo dentro de las cosas: entro por la puerta, cruzo el salón, salgo por la ventana y subo hasta que se ve todo. Eso es el FPV. Una cámara que vuela como la imaginas.
-      </p>
-      <p class="manifiesto__firma">{site.piloto}, piloto de {site.nombre}</p>
-    </div>
-  </section>
+    <!-- Manifiesto: el vídeo sigue volando de fondo mientras se lee -->
+    <section class="manifiesto" slot="continuacion">
+      <div class="wrap">
+        <p class="manifiesto__texto" data-palabras>
+          No hago fotos desde arriba. Vuelo dentro de las cosas: entro por la puerta, cruzo el salón, salgo por la ventana y subo hasta que se ve todo. Eso es el FPV. Una cámara que vuela como la imaginas.
+        </p>
+        <p class="manifiesto__firma">{site.piloto}, piloto de {site.nombre}</p>
+      </div>
+    </section>
+  </Hero>
 
   <!-- Dos puertas -->
   <section class="puertas" aria-label="Elige qué necesitas">
@@ -90,10 +88,10 @@ import danos from '../assets/photos/valoracion-danos.jpg';
   </section>
 
   <!-- Taller -->
-  <section class="bloque tema-cal taller-intro" data-tema="cal">
+  <section class="bloque tema-cal taller-intro" data-tema="cal" aria-labelledby="taller-intro-titulo">
     <div class="wrap taller-intro__grid">
       <div class="taller-intro__texto">
-        <h2 class="display t-xl">Tu dron, otra vez en el aire.</h2>
+        <h2 id="taller-intro-titulo" class="display t-xl">Tu dron, otra vez en el aire.</h2>
         <ul class="promesas">
           <li>Diagnóstico antes de tocar nada</li>
           <li>Prueba de vuelo antes de devolverlo</li>
@@ -101,10 +99,8 @@ import danos from '../assets/photos/valoracion-danos.jpg';
         </ul>
         <a class="boton boton--negro" href={u('/taller')}>Ver el taller y qué arreglo</a>
       </div>
-      <div class="taller-intro__fotos">
-        <Image src={montaje} alt="Dron FPV blanco recién montado" widths={[480, 800]} sizes="(max-width: 900px) 50vw, 24vw" />
-        <Image src={cinewhoop} alt="Cinewhoop con cámara de acción" widths={[480, 800]} sizes="(max-width: 900px) 50vw, 24vw" />
-        <Image src={danos} alt="Soporte de cámara roto tras un golpe" widths={[480, 800]} sizes="(max-width: 900px) 50vw, 24vw" />
+      <div class="taller-intro__dron" data-montaje data-montaje-giro="-28">
+        <DronSvg />
       </div>
     </div>
   </section>
@@ -116,12 +112,13 @@ import danos from '../assets/photos/valoracion-danos.jpg';
       <div class="sobre__texto">
         <p class="t-m">Monto, reparo y vuelo mis propios drones. Con ellos grabo lo que no se puede grabar desde el suelo.</p>
         <p class="lead">Hablas siempre conmigo, del primer mensaje a la entrega.</p>
-        {(site.numeroOperador || site.seguro) && (
-          <ul class="sobre__datos">
-            {site.numeroOperador && <li>Operador UAS registrado · {site.numeroOperador}</li>}
-            {site.seguro && <li>{site.seguro}</li>}
-          </ul>
-        )}
+        <dl class="ficha-piloto osd">
+          <div><dt>PILOTO</dt><dd>{site.piloto.toUpperCase()}</dd></div>
+          <div><dt>BASE</dt><dd>SEVILLA · 37.389° N 5.984° W</dd></div>
+          <div><dt>VUELA</dt><dd>FPV · CINEWHOOP · ESTABILIZADO</dd></div>
+          {site.numeroOperador && <div><dt>OPERADOR UAS</dt><dd>{site.numeroOperador}</dd></div>}
+          {site.seguro && <div><dt>SEGURO</dt><dd>{site.seguro.toUpperCase()}</dd></div>}
+        </dl>
         <a class="enlace" href={`https://www.instagram.com/${site.instagram}/`} target="_blank" rel="noopener">Más vuelos en @{site.instagram}</a>
       </div>
     </div>
@@ -134,11 +131,12 @@ import danos from '../assets/photos/valoracion-danos.jpg';
 
 <style>
   /* Manifiesto */
+  .manifiesto { min-height: 130svh; display: flex; align-items: center; padding-block: 20svh 34svh; }
   .manifiesto__texto {
     font-size: clamp(1.9rem, 4.4vw, 4.6rem); line-height: 1.08; font-weight: 700; font-stretch: 112%;
     letter-spacing: -0.02em; max-width: 24ch;
   }
-  .manifiesto__firma { margin-top: 48px; color: var(--gris); }
+  .manifiesto__firma { margin-top: 48px; color: rgba(242, 243, 238, .7); }
 
   /* Puertas */
   .puertas { display: flex; height: min(92svh, 900px); min-height: 560px; border-top: 1px solid var(--linea); }
@@ -191,14 +189,16 @@ import danos from '../assets/photos/valoracion-danos.jpg';
   .taller-intro__texto { display: grid; gap: 40px; justify-items: start; }
   .promesas { list-style: none; margin: 0; padding: 0; display: grid; border-top: 1px solid rgba(17,20,16,.14); }
   .promesas li { padding: 18px 0; border-bottom: 1px solid rgba(17,20,16,.14); font-size: 1.25rem; font-weight: 700; font-stretch: 108%; }
-  .taller-intro__fotos { display: grid; grid-template-columns: 1.2fr 1fr; grid-template-rows: repeat(2, clamp(170px, 19vw, 280px)); gap: 14px; }
-  .taller-intro__fotos :global(img) { width: 100%; height: 100%; object-fit: cover; }
-  .taller-intro__fotos :global(img:first-child) { grid-row: span 2; }
+  .taller-intro { overflow: clip; }
+  .taller-intro__dron { aspect-ratio: 1; width: 100%; max-width: 760px; justify-self: center; }
   @media (max-width: 900px) { .taller-intro__grid { grid-template-columns: 1fr; } }
 
   /* Sobre mí */
   .sobre__grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px clamp(40px, 7vw, 120px); align-items: start; }
   .sobre__texto { display: grid; gap: 28px; justify-items: start; }
-  .sobre__datos { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; color: var(--salvia); }
+  .ficha-piloto { margin: 8px 0; display: grid; width: 100%; max-width: 520px; font-size: .9rem; border-top: 1px solid var(--linea); }
+  .ficha-piloto div { display: flex; justify-content: space-between; gap: 24px; padding: 12px 0; border-bottom: 1px solid var(--linea); }
+  .ficha-piloto dt { color: var(--gris); }
+  .ficha-piloto dd { margin: 0; text-align: right; color: var(--salvia); }
   @media (max-width: 900px) { .sobre__grid { grid-template-columns: 1fr; } }
 </style>

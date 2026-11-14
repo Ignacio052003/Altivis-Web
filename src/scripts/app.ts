@@ -8,6 +8,9 @@ import { iniciarEscenas } from './escenas';
 import { iniciarContacto } from './contacto';
 import { iniciarDron } from './dron';
 import { iniciarUsos } from './usos';
+import { iniciarCanal } from './canal';
+import { iniciarMira } from './mira';
+import { iniciarCanales } from './canales';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -39,6 +42,9 @@ iniciarHud(lenis, reducido);
 iniciarContacto();
 iniciarDron();
 iniciarUsos();
-iniciarIntro(lenis, () => iniciarEscenas(reducido));
+iniciarCanal(reducido);
+iniciarMira(reducido);
+iniciarCanales(reducido);
+iniciarIntro(lenis, () => iniciarEscenas(reducido, lenis));
 
 window.addEventListener('load', () => ScrollTrigger.refresh());
