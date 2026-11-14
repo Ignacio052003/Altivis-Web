@@ -21,6 +21,13 @@ const {
 const id = `f-${modo}`;
 ---
 <section class:list={['contacto bloque', tema === 'cal' && 'tema-cal']} id="contacto" data-tema={tema === 'cal' ? 'cal' : undefined}>
+  <!-- Pista de aterrizaje: aquí termina el vuelo -->
+  <svg class="contacto__pista" viewBox="0 0 600 600" aria-hidden="true">
+    <circle cx="300" cy="300" r="292" class="pista__fuera" />
+    <circle cx="300" cy="300" r="214" />
+    <path d="M232 214v172M368 214v172M232 300h136" class="pista__h" />
+    <path d="M300 0v44M300 556v44M0 300h44M556 300h44" />
+  </svg>
   <div class="wrap contacto__grid">
     <div class="contacto__intro">
       <h2 class="display t-xl">{titulo}</h2>
@@ -94,7 +101,12 @@ const id = `f-${modo}`;
 </section>
 
 <style>
-  .contacto { border-top: 1px solid var(--linea); }
+  .contacto { border-top: 1px solid var(--linea); position: relative; overflow: clip; }
+  .contacto__pista { position: absolute; left: -9vw; bottom: -16vw; width: min(64vw, 900px); height: auto; fill: none; stroke: currentColor; stroke-width: 1.5; opacity: .13; pointer-events: none; }
+  .contacto__pista .pista__fuera { stroke-dasharray: 4 14; transform-origin: 300px 300px; animation: pista 80s linear infinite; }
+  .contacto__pista .pista__h { stroke-width: 26; }
+  @keyframes pista { to { transform: rotate(360deg); } }
+  .contacto__grid { position: relative; }
   .contacto__grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 64px clamp(40px, 7vw, 120px); align-items: start; }
   .contacto__intro { display: grid; gap: 28px; position: sticky; top: 120px; }
   .contacto__directo { display: flex; flex-wrap: wrap; align-items: center; gap: 18px 28px; margin-top: 8px; }

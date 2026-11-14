@@ -2,7 +2,7 @@
 import { getImage, Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import Hero from '../components/Hero.astro';
-import Toma from '../components/Toma.astro';
+import Canales from '../components/Canales.astro';
 import Paso from '../components/Paso.astro';
 import Faq from '../components/Faq.astro';
 import Contacto from '../components/Contacto.astro';
@@ -16,6 +16,7 @@ import cinewhoop from '../assets/photos/cinewhoop.jpg';
 
 // Modo cine: imágenes grandes en formato panorámico, poco texto, lenguaje llano.
 const tomas = [
+  // nombre y texto vienen de `drones` en contenido.ts
   { ...drones[0], imagen: chalet, alt: 'Finca vista desde arriba con un dron normal', video: site.video.dronNormal, pos: 'center 45%' },
   { ...drones[1], imagen: coche, alt: 'Dron FPV siguiendo a un coche', video: site.video.fpv, pos: 'center 60%' },
   { ...drones[2], imagen: cinewhoop, alt: 'Cinewhoop, el dron pequeño que vuela en interiores', video: site.video.cinewhoop, pos: 'center 72%' },
@@ -47,17 +48,7 @@ const lista = site.plazoEntrega ? [...entregables, `Entrega en ${site.plazoEntre
     <div class="wrap">
       <h2 id="drones-titulo" class="display t-xl cine-titulo">Tres drones, tres maneras de mirar.</h2>
     </div>
-    <div class="cine-tomas">
-      {tomas.map((t) => (
-        <figure class="cine-toma">
-          <Toma imagen={t.imagen} alt={t.alt} video={t.video} posicion={t.pos} sizes="100vw" class="cine-toma__media" />
-          <figcaption class="wrap">
-            <h3 class="display t-l">{t.nombre}</h3>
-            <p>{t.texto}</p>
-          </figcaption>
-        </figure>
-      ))}
-    </div>
+    <Canales canales={tomas} />
   </section>
 
   <!-- Qué grabo -->
@@ -125,17 +116,6 @@ const lista = site.plazoEntrega ? [...entregables, `Entrega en ${site.plazoEntre
 
 <style>
   .cine-titulo { max-width: 14ch; margin-bottom: clamp(48px, 7vw, 96px); }
-
-  /* Tomas panorámicas a sangre, con el texto debajo */
-  .cine-tomas { display: grid; gap: clamp(72px, 10vw, 140px); }
-  .cine-toma { margin: 0; display: grid; gap: 28px; }
-  .cine-toma :global(.cine-toma__media) { aspect-ratio: 2.39 / 1; width: 100%; }
-  .cine-toma figcaption { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px 48px; align-items: baseline; }
-  .cine-toma figcaption p { font-size: clamp(1.15rem, 1.6vw, 1.45rem); line-height: 1.4; color: var(--gris); max-width: 32ch; }
-  @media (max-width: 760px) {
-    .cine-toma :global(.cine-toma__media) { aspect-ratio: 4 / 3; }
-    .cine-toma figcaption { grid-template-columns: 1fr; }
-  }
 
   /* Usos: lista a la izquierda, marco fijo a la derecha que cambia de imagen */
   .usos-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(32px, 5vw, 80px); align-items: start; }

@@ -15,57 +15,67 @@ interface Props {
 const { lineas, texto, imagen, alt, video, posicion = 'center', compacto = false } = Astro.props;
 ---
 <section class:list={['hero', compacto && 'hero--compacto']} data-hero>
-  <div class="hero__media" data-hero-picado>
-    <div class="hero__alabeo" data-hero-alabeo>
-      <div class="hero__marco" data-hero-media>
-        {video ? (
-          <video src={u(video)} poster={u(video.replace(/\.mp4$/i, '.jpg'))} autoplay muted loop playsinline preload="metadata" aria-label={alt} style={`object-position:${posicion}`}></video>
-        ) : (
-          <Image src={imagen} alt={alt} widths={[640, 960, 1280, 1600, 2000]} sizes="100vw" loading="eager" fetchpriority="high" style={`object-position:${posicion}`} />
-        )}
+  <!-- El fondo se queda fijo mientras pasa todo lo que haya dentro del hero -->
+  <div class="hero__fondo">
+    <div class="hero__media" data-hero-picado>
+      <div class="hero__alabeo" data-hero-alabeo>
+        <div class="hero__marco" data-hero-media>
+          {video ? (
+            <video src={u(video)} poster={u(video.replace(/\.mp4$/i, '.jpg'))} autoplay muted loop playsinline preload="metadata" aria-label={alt} style={`object-position:${posicion}`} data-hero-video></video>
+          ) : (
+            <Image src={imagen} alt={alt} widths={[640, 960, 1280, 1600, 2000]} sizes="100vw" loading="eager" fetchpriority="high" style={`object-position:${posicion}`} />
+          )}
+        </div>
+      </div>
+    </div>
+    <div class="hero__velo"></div>
+    <div class="hero__sombra" data-hero-sombra></div>
+    <div class="hero__osd" aria-hidden="true" data-hero-osd>
+      <div class="hero__horizonte" data-horizonte><span></span><i></i><span></span></div>
+    </div>
+  </div>
+
+  <div class="hero__primera" data-hero-primera>
+    <div class="wrap hero__texto" data-hero-texto>
+      <h1 class="display t-hero">
+        {lineas.map((l) => <span class="linea"><span data-linea>{l}</span></span>)}
+      </h1>
+      <div class="hero__pie">
+        <p class="lead" data-entra>{texto}</p>
+        <div class="hero__acciones" data-entra><slot /></div>
       </div>
     </div>
   </div>
-  <div class="hero__velo"></div>
 
-  <div class="hero__osd" aria-hidden="true">
-    <div class="hero__horizonte" data-horizonte><span></span><i></i><span></span></div>
-  </div>
-
-  <div class="wrap hero__texto" data-hero-texto>
-    <h1 class="display t-hero">
-      {lineas.map((l) => <span class="linea"><span data-linea>{l}</span></span>)}
-    </h1>
-    <div class="hero__pie">
-      <p class="lead" data-entra>{texto}</p>
-      <div class="hero__acciones" data-entra><slot /></div>
-    </div>
-  </div>
+  {Astro.slots.has('continuacion') && <div class="hero__sigue"><slot name="continuacion" /></div>}
 </section>
 
 <style>
-  .hero { position: relative; min-height: 100svh; display: flex; align-items: flex-end; overflow: hidden; background: var(--negro); isolation: isolate; }
-  .hero--compacto { min-height: 88svh; }
-  .hero__media, .hero__alabeo, .hero__marco { position: absolute; inset: 0; }
-  .hero__media { z-index: -2; transform-origin: 50% 70%; }
+  .hero { --h: 100svh; position: relative; overflow: clip; background: var(--negro); }
+  .hero--compacto { --h: 88svh; }
+  .hero__fondo { position: sticky; top: 0; height: var(--h); overflow: hidden; isolation: isolate; }
+  .hero__media, .hero__alabeo, .hero__marco, .hero__velo, .hero__sombra, .hero__osd { position: absolute; inset: 0; }
+  .hero__media { transform-origin: 50% 70%; }
   .hero__marco :global(img), .hero__marco video { width: 100%; height: 100%; object-fit: cover; }
   .hero__velo {
-    position: absolute; inset: 0; z-index: -1;
     background:
       linear-gradient(180deg, rgba(3,4,3,.55) 0%, rgba(3,4,3,0) 22%),
       linear-gradient(90deg, rgba(3,4,3,.5) 0%, rgba(3,4,3,0) 55%),
       linear-gradient(0deg, rgba(3,4,3,.92) 0%, rgba(3,4,3,.55) 32%, rgba(3,4,3,0) 62%);
   }
-  .hero__osd { position: absolute; inset: 0; z-index: -1; pointer-events: none; display: grid; place-items: center; mix-blend-mode: difference; }
+  .hero__sombra { background: var(--negro); opacity: 0; }
+  .hero__osd { pointer-events: none; display: grid; place-items: center; mix-blend-mode: difference; }
   .hero__horizonte { display: flex; align-items: center; gap: 18px; width: min(44vw, 520px); margin-top: -12vh; }
   .hero__horizonte span { flex: 1; height: 1.5px; background: rgba(255,255,255,.75); }
   .hero__horizonte i { width: 22px; height: 22px; border: 1.5px solid rgba(255,255,255,.85); border-radius: 50%; flex: none; }
 
+  .hero__primera { position: relative; margin-top: calc(var(--h) * -1); min-height: var(--h); display: flex; align-items: flex-end; }
   .hero__texto { position: relative; display: grid; gap: clamp(28px, 4vw, 48px); padding-bottom: clamp(72px, 9vw, 120px); padding-top: 140px; }
   .hero h1 { max-width: 16ch; }
   .hero__pie { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 28px 48px; }
   .hero__pie .lead { color: rgba(242, 243, 238, .86); }
   .hero__acciones { display: flex; flex-wrap: wrap; gap: 12px; }
+  .hero__sigue { position: relative; }
 
   @media (max-width: 760px) {
     .hero__horizonte { width: 60vw; margin-top: -24vh; }

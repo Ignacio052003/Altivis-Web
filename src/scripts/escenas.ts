@@ -1,16 +1,18 @@
+import type Lenis from 'lenis';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-export function iniciarEscenas(reducido: boolean) {
+export function iniciarEscenas(reducido: boolean, lenis: Lenis | null) {
   if (reducido) return;
-  hero();
+  hero(lenis);
   palabras();
   tira();
+  montaje();
   ScrollTrigger.refresh();
 }
 
 /** Hero: alabeo con el ratón (como un FPV que gira) y picado al hacer scroll. */
-function hero() {
+function hero(lenis: Lenis | null) {
   const hero = document.querySelector<HTMLElement>('[data-hero]');
   if (!hero) return;
   const picado = hero.querySelector<HTMLElement>('[data-hero-picado]');
@@ -35,16 +37,40 @@ function hero() {
     hero.addEventListener('pointerleave', () => { rot(0); mx(0); my(0); hRot?.(0); hY?.(0); });
   }
 
+  const primera = hero.querySelector<HTMLElement>('[data-hero-primera]') ?? hero;
+  const sombra = hero.querySelector<HTMLElement>('[data-hero-sombra]');
+  const osd = hero.querySelector<HTMLElement>('[data-hero-osd]');
+  const continua = hero.offsetHeight > primera.offsetHeight * 1.2;
+
   if (picado) {
     gsap.to(picado, {
-      scale: 1.32, yPercent: 10, ease: 'none',
+      scale: continua ? 1.5 : 1.32, yPercent: continua ? 0 : 10, ease: 'none',
       scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true },
     });
   }
   if (texto) {
     gsap.to(texto, {
       y: -140, opacity: 0, ease: 'none',
-      scrollTrigger: { trigger: hero, start: '25% top', end: '85% top', scrub: true },
+      scrollTrigger: { trigger: primera, start: '25% top', end: '85% top', scrub: true },
+    });
+  }
+  if (osd) gsap.to(osd, { opacity: 0, ease: 'none', scrollTrigger: { trigger: primera, start: '30% top', end: '80% top', scrub: true } });
+  // Si el hero continúa (portada), el vídeo sigue volando de fondo, más oscuro, mientras se lee el manifiesto
+  if (sombra && continua) {
+    gsap.to(sombra, { opacity: 0.74, ease: 'none', scrollTrigger: { trigger: primera, start: '35% top', end: 'bottom top', scrub: true } });
+  }
+
+  // El scroll es el acelerador: cuanto más rápido bajas, más rápido vuela el vídeo
+  const video = hero.querySelector<HTMLVideoElement>('[data-hero-video]');
+  if (video && lenis) {
+    let ritmo = 1;
+    gsap.ticker.add(() => {
+      const r = hero.getBoundingClientRect();
+      if (r.bottom < 0) return;
+      const objetivo = 1 + Math.min(2.2, Math.abs(lenis.velocity) * 0.07);
+      ritmo += (objetivo - ritmo) * 0.08;
+      const v = Math.round(ritmo * 20) / 20;
+      if (Math.abs(video.playbackRate - v) > 0.04) { try { video.playbackRate = v; } catch (e) { /* no admitido */ } }
     });
   }
 }
@@ -88,8 +114,31 @@ function tira() {
       x: () => -distancia(), ease: 'none',
       scrollTrigger: { trigger: sec, start: 'top top', end: () => `+=${distancia()}`, scrub: 0.6, pin: true, invalidateOnRefresh: true, anticipatePin: 1 },
     });
+    // Los fotogramas se inclinan un poco con la velocidad, como una tira que pasa deprisa
+    const inclina = gsap.quickTo(pista.querySelectorAll('.fotograma__img'), 'skewX', { duration: 0.5, ease: 'power3.out' });
+    const st = ScrollTrigger.create({ trigger: sec, start: 'top bottom', end: () => `+=${distancia() + window.innerHeight * 2}`, onUpdate: (self) => inclina(gsap.utils.clamp(-7, 7, self.getVelocity() / -260)) });
     const barra = sec.querySelector<HTMLElement>('[data-tira-progreso]');
     if (barra) gsap.fromTo(barra, { scaleX: 0 }, { scaleX: 1, ease: 'none', scrollTrigger: { trigger: sec, start: 'top top', end: () => `+=${distancia()}`, scrub: true } });
-    return () => tween.kill();
+    return () => { tween.kill(); st.kill(); };
+  });
+}
+
+/** El dron llega despiezado y se monta a medida que entras en la sección. */
+function montaje() {
+  document.querySelectorAll<HTMLElement>('[data-montaje]').forEach((sec) => {
+    const svg = sec.querySelector<SVGSVGElement>('[data-dron-svg]');
+    if (!svg) return;
+    const tl = gsap.timeline({
+      defaults: { ease: 'power2.out' },
+      scrollTrigger: { trigger: svg, start: 'top 95%', end: 'center 46%', scrub: 0.6 },
+    });
+    svg.querySelectorAll<SVGGElement>('[data-explota]').forEach((g) => {
+      const [dx, dy] = (g.dataset.explota || '0,0').split(',').map(Number);
+      tl.fromTo(g, { x: dx, y: dy }, { x: 0, y: 0 }, 0);
+    });
+    const giro = Number(sec.dataset.montajeGiro || 0);
+    if (giro) tl.fromTo(svg, { rotation: giro, transformOrigin: '50% 50%' }, { rotation: 0 }, 0);
+    const puntos = sec.querySelectorAll('.dron__punto');
+    if (puntos.length) tl.fromTo(puntos, { opacity: 0 }, { opacity: 1, duration: 0.15 }, 0.85);
   });
 }

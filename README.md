@@ -4,6 +4,8 @@ Nueva web de [Altivis Studio](https://altivis.es): grabación aérea con drones 
 
 **La idea:** la web es un vuelo visto desde las gafas del piloto. El OSD (REC, batería, altitud y velocidad) acompaña todo el recorrido: la batería se va gastando a medida que bajas y el vuelo termina en el contacto.
 
+**Detalles que sostienen la idea:** el vídeo de portada acelera con el scroll (el scroll es el gas), los sticks de la emisora se mueven en el OSD, las páginas cambian con un golpe de estática como al cambiar de canal en las gafas, el dron del taller llega despiezado y se monta solo, y el contacto es la pista de aterrizaje.
+
 ## Páginas
 
 | Ruta | Para quién |

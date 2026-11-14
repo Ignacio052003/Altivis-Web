@@ -1,0 +1,111 @@
+---
+// Dron FPV visto desde arriba. Dibujo propio, compartido por la portada y el taller.
+// data-parte: pieza a la que pertenece (para marcarla en el taller).
+// data-explota="dx,dy": desde dónde llega esa pieza cuando el dron se monta al hacer scroll.
+const motores: [number, number, number, number][] = [
+  [130, 130, -1, -1], [470, 130, 1, -1], [130, 470, -1, 1], [470, 470, 1, 1],
+];
+---
+<svg class="dsvg" viewBox="-60 -60 720 720" role="img" aria-label="Dron FPV visto desde arriba con sus piezas principales" data-dron-svg>
+  {motores.map(([x, y, sx, sy], i) => (
+    <g data-parte="motor" class="dsvg__helice" data-explota={`${sx * 95},${sy * 95}`} data-gira={i % 2 ? -1 : 1}>
+      <circle cx={x} cy={y} r="116" class="dsvg__disco" />
+      <g class="dsvg__aspas" style={`transform-origin:${x}px ${y}px`}>
+        <path d={`M${x - 108} ${y + 10} Q${x - 54} ${y - 16} ${x} ${y} Q${x + 54} ${y + 16} ${x + 108} ${y - 10}`} class="dsvg__aspa" />
+        <path d={`M${x - 10} ${y - 108} Q${x + 16} ${y - 54} ${x} ${y} Q${x - 16} ${y + 54} ${x + 10} ${y + 108}`} class="dsvg__aspa" />
+      </g>
+    </g>
+  ))}
+
+  <g data-parte="frame" class="dsvg__frame">
+    <path class="dsvg__brazos" d="M300 300 L130 130 M300 300 L470 130 M300 300 L130 470 M300 300 L470 470" />
+    <path class="dsvg__cables" d="M262 262 L150 150 M338 262 L450 150 M262 338 L150 450 M338 338 L450 450" />
+    <rect class="dsvg__placa" x="222" y="196" width="156" height="300" rx="34" />
+    <rect class="dsvg__placa-int" x="236" y="212" width="128" height="268" rx="24" />
+    {[[244, 222], [356, 222], [244, 378], [356, 378], [244, 470], [356, 470]].map(([x, y]) => <circle cx={x} cy={y} r="6.5" class="dsvg__tornillo" />)}
+  </g>
+
+  {motores.map(([x, y, sx, sy]) => (
+    <g data-parte="motor" class="dsvg__motor" data-explota={`${sx * 46},${sy * 46}`}>
+      <circle cx={x} cy={y} r="42" class="dsvg__base" />
+      <circle cx={x} cy={y} r="29" class="dsvg__campana" />
+      {[0, 60, 120, 180, 240, 300].map((a) => (
+        <circle cx={x + Math.cos((a * Math.PI) / 180) * 18} cy={y + Math.sin((a * Math.PI) / 180) * 18} r="4" class="dsvg__iman" />
+      ))}
+      <circle cx={x} cy={y} r="7" class="dsvg__eje" />
+    </g>
+  ))}
+
+  <g data-parte="camara" class="dsvg__pieza" data-explota="0,-120">
+    <rect x="258" y="136" width="84" height="68" rx="12" />
+    <circle cx="300" cy="150" r="23" class="dsvg__lente" />
+    <circle cx="300" cy="150" r="11" class="dsvg__iris" />
+    <circle cx="293" cy="143" r="3.5" class="dsvg__brillo" />
+  </g>
+
+  <g data-parte="controladora" class="dsvg__pieza" data-explota="-210,-30">
+    <rect x="250" y="234" width="100" height="64" rx="8" />
+    <rect x="281" y="250" width="38" height="32" rx="4" class="dsvg__chip" />
+    <path d="M260 244h10M260 256h10M260 268h10M260 280h10M330 244h10M330 256h10M330 268h10M330 280h10" class="dsvg__pistas" />
+  </g>
+
+  <g data-parte="esc" class="dsvg__pieza" data-explota="210,30">
+    <rect x="250" y="306" width="100" height="64" rx="8" />
+    {[[262, 318], [284, 318], [306, 318], [328, 318], [262, 346], [284, 346], [306, 346], [328, 346]].map(([x, y]) => <rect x={x} y={y} width="12" height="14" rx="2" class="dsvg__chip" />)}
+  </g>
+
+  <g data-parte="bateria" class="dsvg__pieza" data-explota="0,150">
+    <rect x="242" y="392" width="116" height="86" rx="10" />
+    <path d="M268 392v86M332 392v86" class="dsvg__cinta" />
+    <path d="M300 478v34" class="dsvg__cable" />
+    <rect x="285" y="508" width="30" height="20" rx="3" class="dsvg__xt60" />
+  </g>
+
+  <g data-parte="receptor" class="dsvg__antena" data-explota="-110,90">
+    <path d="M236 470 L196 534 M236 470 L176 500" /><circle cx="236" cy="470" r="9" />
+  </g>
+
+  <g data-parte="camara" class="dsvg__antena" data-explota="110,90">
+    <path d="M364 470 L398 528" /><circle cx="400" cy="532" r="13" />
+  </g>
+</svg>
+
+<style is:global>
+  .dsvg { width: 100%; height: 100%; overflow: visible; display: block; }
+  .dsvg__disco { fill: rgba(17, 20, 16, .035); stroke: rgba(17, 20, 16, .12); stroke-width: 1.5; stroke-dasharray: 3 7; }
+  .dsvg__aspas { animation: dsvg-girar 3.4s linear infinite; }
+  .dsvg__helice[data-gira='-1'] .dsvg__aspas { animation-direction: reverse; }
+  .dsvg__aspa { fill: none; stroke: rgba(17, 20, 16, .24); stroke-width: 9; stroke-linecap: round; }
+  @keyframes dsvg-girar { to { transform: rotate(360deg); } }
+
+  .dsvg__brazos { stroke: #1D221C; stroke-width: 30; stroke-linecap: round; fill: none; }
+  .dsvg__cables { stroke: #586253; stroke-width: 3; stroke-linecap: round; fill: none; stroke-dasharray: 1 7; }
+  .dsvg__placa { fill: #1D221C; }
+  .dsvg__placa-int { fill: none; stroke: #343C32; stroke-width: 1.5; }
+  .dsvg__tornillo { fill: #8D968A; }
+  .dsvg__base { fill: #2C332B; }
+  .dsvg__campana { fill: #3D463B; }
+  .dsvg__iman { fill: #2C332B; }
+  .dsvg__eje { fill: #C9CFC5; }
+  .dsvg__pieza > rect:first-child { fill: #3A4238; }
+  .dsvg__chip { fill: #23291F; }
+  .dsvg__lente { fill: #0B0D0A; stroke: #5B6558; stroke-width: 3; }
+  .dsvg__iris { fill: #1B2630; }
+  .dsvg__brillo { fill: #C9D6DE; }
+  .dsvg__pistas { stroke: #B9C1B4; stroke-width: 3; stroke-linecap: round; }
+  .dsvg__cinta { stroke: #23291F; stroke-width: 10; }
+  .dsvg__cable { stroke: #3A4238; stroke-width: 8; stroke-linecap: round; }
+  .dsvg__xt60 { fill: var(--albero); }
+  .dsvg__antena path { stroke: #3A4238; stroke-width: 5; stroke-linecap: round; fill: none; }
+  .dsvg__antena circle { fill: #3A4238; }
+
+  .dsvg [data-parte] * { transition: fill .35s, stroke .35s; }
+  .dsvg .dsvg__motor.es-activa .dsvg__base, .dsvg .dsvg__motor.es-activa .dsvg__campana,
+  .dsvg .dsvg__pieza.es-activa > rect:first-child, .dsvg .dsvg__antena.es-activa circle { fill: var(--salvia-osc); }
+  .dsvg .dsvg__frame.es-activa .dsvg__brazos { stroke: var(--salvia-osc); }
+  .dsvg .dsvg__frame.es-activa .dsvg__placa { fill: #2C4428; }
+  .dsvg .dsvg__antena.es-activa path, .dsvg .es-activa .dsvg__cable { stroke: var(--salvia-osc); }
+  .dsvg .dsvg__helice.es-activa .dsvg__aspa { stroke: var(--salvia-osc); }
+
+  @media (prefers-reduced-motion: reduce) { .dsvg__aspas { animation: none; } }
+</style>

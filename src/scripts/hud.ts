@@ -10,6 +10,13 @@ export function iniciarHud(lenis: Lenis | null, reducido: boolean) {
   const bat = document.querySelector<HTMLElement>('[data-hud-bat]');
   if (!tiempo || !spd || !alt || !volt || !carga || !bat) return;
 
+  const stickI = document.querySelector<HTMLElement>('[data-hud-stick-i]');
+  const stickD = document.querySelector<HTMLElement>('[data-hud-stick-d]');
+  let raton = { x: 0, y: 0 }, dx = 0, dy = 0, gas = 0, guinada = 0;
+  window.addEventListener('pointermove', (e) => {
+    raton = { x: (e.clientX / window.innerWidth - 0.5) * 2, y: (e.clientY / window.innerHeight - 0.5) * 2 };
+  }, { passive: true });
+
   const inicio = performance.now();
   const dos = (n: number) => String(n).padStart(2, '0');
 
@@ -41,6 +48,16 @@ export function iniciarHud(lenis: Lenis | null, reducido: boolean) {
     ultimoY = y; ultimoT = ahora;
     velSuave += (Math.min(140, pxs * 0.045) - velSuave) * 0.12;
     spd.textContent = String(Math.round(velSuave));
+
+    // sticks: gas con la velocidad de scroll (y su sentido), cabeceo/alabeo con el ratón
+    if (stickI && stickD) {
+      const sentido = lenis ? Math.sign(lenis.velocity) : 0;
+      gas += (Math.min(1, velSuave / 90) - gas) * 0.2;
+      guinada += (sentido * Math.min(1, velSuave / 120) - guinada) * 0.1;
+      dx += (raton.x - dx) * 0.15; dy += (raton.y - dy) * 0.15;
+      stickI.style.transform = `translate(${(guinada * 9).toFixed(1)}px, ${(9 - gas * 18).toFixed(1)}px)`;
+      stickD.style.transform = `translate(${(dx * 10).toFixed(1)}px, ${(dy * 10).toFixed(1)}px)`;
+    }
   };
 
   if (reducido) {
